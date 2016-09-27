@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript assignment</title>
+	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/jquery.min.js"></script>
+	<script src="../public/javascript/Chart.min.js"> </script>
+	
+	
+	<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+  	<link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+  	
+  	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
+	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
+	
+	<style>
+		#vargraph * {
+			border:1px solid;
+			margin:1px
+			
+		}
+		
+		input::-webkit-calendar-picker-indicator {
+              opacity: 100;
+           }
+		#map{ position:absolute; width:100%; height:50% }
+  		.leaflet-control-attribution, leaflet-control {display:none}
+	</style>
+</head>
+<body>
+<!-- map -->
+<div >
+	<div>
+  		<p>Coordinates are (lat,lng):<span id="coordinates"></span> </p>
+	</div>
+	
+	<div>
+		<p>Area: <span id="area"></span></p>
+  	</div>
+	
+	<button id="polyButton" type="button" >Draw polygon</button>
+	<button id="markerButton" type="button" >Mark a point</button>
+  	
+	<div id="map">
+  	</div>
+</div>
+<!-- map end-->
+<!-- var and graph-->
+<div id="vargraph" style="margin-top:400px;">
+	<div id="div1">
+		<button id="button" onclick="getDatasets()" >Get datasets</button>
+		Start date: <input id="meeting" type="date" value=""/>
+		End date: <input id="meeting" type="date" value=""/>
+	</div >
+	<div id="div2" style = "" >
+		Dataset 
+		<input type='text' list='listid' oninput="getVariables()" id="datasets" placeholder="select dataset">
+			<datalist id='listid'>	   
+			</datalist>
+				
+		</input>
+		Variables
+		<input type='text' list='varid' oninput="showData()" id="variables" placeholder="select variable">
+			<datalist id='varid'>	   
+			</datalist>
+				
+		</input>
+		
+		<div id="cont" style = "" >
+		</div>
+	</div>
+	<canvas id="chart" width="600" height="400"></canvas>
+</div>
+<!-- var and graph end -->
+<script>
+	$("#meeting").change(function(){
+		var date =$("#meeting").val();
+		console.log(date);
+		var isodate = new Date(date).toISOString();
+		console.log(isodate);
+	});
+</script>
+<script src="../public/javascript/VarGraph.js"></script>
+<script src="C:/Users/Reio/Documents/OOP/tarkvaraprojektOS/public/javascripts/displayMap.js"></script>
+
+
+
+</body>
+</html>

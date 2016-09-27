@@ -1,5 +1,5 @@
 var key="?apikey=10efd8d786c74f93886d1a955afd758b";
-var url="https://api.planetos.com/v1/datasets";
+var url="http://api.planetos.com/v1/datasets";
 function getDatasets(){
 	$.getJSON(url+key, function(data){
 		console.log(data.slice(0,10));

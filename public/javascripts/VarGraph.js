@@ -34,7 +34,7 @@ function generateGraph(){
 	var id = $("#datasets").val();
 	var lat = latlngobj.lat; //latitude from latlngobj in displayMap.js  
 	var lng = latlngobj.lng;
-	var startDate = $("#start").val();
+	var startDate = $("#StarT").val();
 	var endDate = $("#end").val();
 	if (startDate=="") isoStartDate="";
 	else var isoStartDate = new Date(startDate).toISOString();

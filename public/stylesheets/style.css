@@ -62,5 +62,24 @@ input::-webkit-calendar-picker-indicator {
 			bottom:10px;
 		}
 		#div1 {
-			margin-top:5px;
+			margin-top:5%;
 		}
+    #st, #st1{
+      margin-left:4%;
+    }
+    #st1{
+      margin-top:4.5%;
+    }
+    #st{
+      margin-top:1.5%;
+    }
+    #st, #st1{
+      float:left; 
+    }
+    #start1{
+        margin-left:4px;
+        margin-top:3%;
+    }
+    #datasets{
+      margin-bottom:3%;
+    }

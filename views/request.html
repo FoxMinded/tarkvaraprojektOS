@@ -4,7 +4,7 @@
     <title>JavaScript assignment</title>
 	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
     <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/jquery.min.js"></script>
-	<script src="Chart.min.js"> </script>
+	<script src="javascripts/Chart.min.js"> </script>
 	
 	
 	
@@ -19,68 +19,8 @@
 	<link href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css' rel='stylesheet' />
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js'></script>
 	
-	
-	<style>
-		
-		input::-webkit-calendar-picker-indicator {
-              opacity: 100;
-           }
-		
-  		.leaflet-control-attribution, leaflet-control {display:none}
-		.default {display:none}
-		
-		#vars {
-			position:relative;
-			margin: 5px 5px 5px 5px;
-			
-			float:left;
-			width:35%;
-			height:60%;
-			
-		}
-		#mapdiv {
-			position:relative;
-			margin: 5px 5px 5px 5px;
-			border:1px solid;
-			overflow:hidden;
-			
-			height:60%;
-			
-		}
-		#map{ position:absolute; width:100%; height:100% }
-		
-		#markerButton {
-			margin-top:3px;
-			margin-left:3px;
-			
-			position:relative;
-			z-index:1
-		}
-		
-		#coorddiv {
-			margin-left:35.5%;
-			clear:both;
-		}
-		
-		canvas{
-			width:100%;
-			height:100%;
-		}
-		
-		#graph{
-			height:100%;
-			border:1px solid;
-			margin:5px;
-		}
-		
-		#generateGraph {
-			position:absolute;
-			bottom:10px;
-		}
-		#div1 {
-			margin-top:5px;
-		}
-	</style>
+	<link href="stylesheets/style.css" rel="stylesheet" />
+
 </head>
 <body>
 <script>
@@ -90,7 +30,7 @@
 <div id="vars">
 	<div id="div2" >
 		Dataset 
-		<select disabled="true" id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
+		<select  id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
 			<option default class="default">Select dataset</option>
 			<option value="noaa_gfs_global_sflux_0.12d">noaa_gfs_global_sflux_0.12d</option>
 			<option value="noaa_icoads_enhanced_1d_day">noaa_icoads_enhanced_1d_day</option>
@@ -130,8 +70,8 @@
 </div>
 <!--graph end -->
 
-<script src="VarGraph.js"></script>
-<script src="displayMap.js"></script>
+<script src="javascripts/VarGraph.js"></script>
+<script src="javascripts/displayMap.js"></script>
 
 
 

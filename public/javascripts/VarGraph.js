@@ -38,6 +38,9 @@ function generateGraph(){
 	var endDate = $("#end").val();
 	var other=new Date(startDate);
 	var other2=new Date(endDate);
+	if (other >other2){
+		alert ("check the dates");
+	}
 
 	if (startDate=="") isoStartDate="";
 	else var isoStartDate = new Date(other.getTime()- other.getTimezoneOffset()*60000).toISOString();

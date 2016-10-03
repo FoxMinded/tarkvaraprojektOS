@@ -34,12 +34,15 @@
 $(document).ready(function() {
     $('#datePicker1')
         .datepicker({
+			
             format: 'mm/dd/yyyy'
+			
         })
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
-			console.log($('#StarT').val());
+
+			$('#datePicker1').datepicker('hide');
         });
 		$('#datePicker2')
         .datepicker({
@@ -48,6 +51,13 @@ $(document).ready(function() {
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
+			var st1= $("#StarT").val();
+			var end1=$("#end").val()
+			if (new Date(st1)<new Date(end1)){
+			$('#end').css("background-color","white");
+			$('#datePicker2').datepicker('hide');}else{
+			$('#end').css("background-color","pink");
+			}
         });
 
     
@@ -79,7 +89,7 @@ $(document).ready(function() {
 		<div class="form-group">
         <p id="st">Start Date:</p>
         <div id="start" class="col-xs-5 date">
-            <div class="input-group input-append date" id="datePicker1">
+            <div class="input-group input-append date" id="datePicker1" >
                 <input type="text" class="form-control" name="date" id="StarT"/>
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>

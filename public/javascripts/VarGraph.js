@@ -36,10 +36,13 @@ function generateGraph(){
 	var lng = latlngobj.lng;
 	var startDate = $("#StarT").val();
 	var endDate = $("#end").val();
+	var other=new Date(startDate);
+	var other2=new Date(endDate);
+
 	if (startDate=="") isoStartDate="";
-	else var isoStartDate = new Date(startDate).toISOString();
+	else var isoStartDate = new Date(other.getTime()- other.getTimezoneOffset()*60000).toISOString();
 	if (endDate=="") isoEndDate="";
-	else var isoEndDate = new Date(endDate).toISOString();
+	else var isoEndDate = new Date(other2.getTime()- other2.getTimezoneOffset()*60000).toISOString();
 	console.log("start:"+startDate);
 	var currenturl = url+"/"+id+"/point"+key+"&var="+variable+"&lat="+lat+"&lon="+lng+
 						"&start="+isoStartDate+"&end="+isoEndDate+"&count=10";

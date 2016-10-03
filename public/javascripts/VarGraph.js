@@ -50,8 +50,6 @@ function generateGraph(){
 		for(var i=0;i<data.entries.length;i++){
 			values.push(data.entries[i].data[variable]);
 			time.push(data.entries[i].axes.time);
-			var text = "<br>Input data is: "+data.entries[i].data[variable];
-			$("#cont").append(text);
 		}
 		if (myChart!=null){
 			myChart.destroy();
@@ -59,7 +57,6 @@ function generateGraph(){
 		createGraph(values,time);
 		$("#graph").attr("tabindex",0).focus();
 	});
-	$("#cont").text("");
 }
 
 

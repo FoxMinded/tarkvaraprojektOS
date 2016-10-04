@@ -4,24 +4,24 @@ var url="http://api.planetos.com/v1/datasets";
 function populate(stndname,varname,htmlid){
 	var options="";
 	for(var i = 0; i < stndname.length; i++)
-		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? varname[i]:stndname[i])+'</option>';
+		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? varname[i]:varname[i])+'</option>';
 	var def = "<option default class="+'default'+">"+'Select variable'+"</option>";
 	$("#"+htmlid).html(def+options);
 }
 function getVariables(){
 	var id=$("#datasets").val();
-	if (id=="") return false;
-	console.log(id); 
+	if (id=="") return false; 
 	var stndname =[];
 	var varname = [];
 	$.getJSON(url+"/"+id+key, function(data){
-		console.log(data);
+		//console.log(data);
 		for (var i = 0;i <data.Variables.length ; i++){
-			if (data.Variables[i].isData)
+			if (data.Variables[i].isData){
 				stndname.push(data.Variables[i].standardName);
 				varname.push(data.Variables[i].name);
+			}
 		}
-		console.log(stndname);
+		//console.log(stndname);
 		populate(stndname,varname,"varid");
 			
 	});
@@ -46,7 +46,7 @@ function generateGraph(){
 	else var isoStartDate = new Date(other.getTime()- other.getTimezoneOffset()*60000).toISOString();
 	if (endDate=="") isoEndDate="";
 	else var isoEndDate = new Date(other2.getTime()- other2.getTimezoneOffset()*60000).toISOString();
-	console.log("start:"+startDate);
+	//console.log("start:"+startDate);
 	var currenturl = url+"/"+id+"/point"+key+"&var="+variable+"&lat="+lat+"&lon="+lng+
 						"&start="+isoStartDate+"&end="+isoEndDate+"&count=10";
 	console.log(currenturl);

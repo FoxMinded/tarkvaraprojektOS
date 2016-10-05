@@ -56,6 +56,7 @@ function generateGraph(){
 		for(var i=0;i<data.entries.length;i++){
 			values.push(data.entries[i].data[variable]);
 			time.push(data.entries[i].axes.time);
+			
 		}
 		if (myChart!=null){
 			myChart.destroy();
@@ -69,6 +70,7 @@ function generateGraph(){
 var myChart;
 function createGraph(values,time){
 	var ctx = $("#chart");
+	
 	myChart = new Chart(ctx, {
 	type: 'bar',
 	data: {

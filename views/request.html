@@ -41,8 +41,14 @@ $(document).ready(function() {
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
-
-			$('#datePicker1').datepicker('hide');
+			var st1= $("#StarT").val();
+			var end1=$("#end").val()
+			
+			if (end1=="" || new Date(st1)< new Date(end1)){
+			$('#StarT').css("background-color","white");
+			$('#datePicker1').datepicker('hide');}else{
+				$('#StarT').css("background-color","pink");
+			}
         });
 		$('#datePicker2')
         .datepicker({
@@ -65,6 +71,9 @@ $(document).ready(function() {
 </script>
 <script>
 	$('.ui.dropdown').dropdown();
+	$('.ui.radio.checkbox')
+  .checkbox()
+;
 </script>
 <!--var-->
 <div id="vars">
@@ -102,7 +111,17 @@ $(document).ready(function() {
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div>
-    </div></form>
+    </div>
+	<form>
+	<p>Select graph style:</p>
+    <label class="radio-inline">
+      <input type="radio" name="optradio">Bar
+    </label>
+    <label class="radio-inline">
+      <input type="radio" name="optradio">Line
+    </label>
+  </form>
+	</form>
 
 	</div >
 	<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>

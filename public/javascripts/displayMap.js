@@ -1,7 +1,7 @@
 
 L.mapbox.accessToken = 'pk.eyJ1IjoicGxhbmV0b3MiLCJhIjoiZjZkNDE4MTE5NWNhOGYyMmZhZmNhMDQwMDg0YWMyNGUifQ.htlwo6U82iekTcpGtDR_dQ';
 
-var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([38.8929,-77.0252],3);  		
+var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([44.59,39.02],2);  		
 var zoomControl = L.control.zoom({position:"topright"});
 map.addControl(zoomControl);
 
@@ -11,9 +11,6 @@ map.addLayer(layer2);
 var featureGroup = L.featureGroup();
 map.addLayer(featureGroup);
 
-var legendControl = L.mapbox.legendControl();
-legendControl.addLegend("test");
-map.addControl(legendControl);
 
 var polygonDraw = new L.Draw.Polygon(map);
 var markerDraw = new L.Draw.Marker(map);
@@ -21,15 +18,17 @@ var markerDraw = new L.Draw.Marker(map);
 $("#polyButton").on("click",drawPolygon);
 $("#markerButton").on("click",drawMarker);
 
+
 function drawMarker(){
 	markerDraw.enable();
-	$("#markerButton").text("Remove mark").css({"background-color":"#707070"});
+	$("#markerButton").text("Remove mark");
 	$("#markerButton").off('click').on('click', removeMarker);
 }
 function removeMarker(){
-	$("#markerButton").text("Mark a point").css("background-color","#FCFCFC");
+	$("#markerButton").text("Mark a point");
 	
 	featureGroup.removeLayer(layer);
+	$("#coordinates").text("");
 	$("#markerButton").off('click').on('click', drawMarker);
 				
 }
@@ -55,6 +54,7 @@ map.on("draw:drawstart", function(e){
 	console.log("drawstart");
 });
 map.on("draw:drawstop", function(e){
+	$("#datasets").attr("disabled",false);
 	console.log("drawstop");
 });
 map.on("draw:drawvertex", function(e){

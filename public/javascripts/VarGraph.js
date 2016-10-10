@@ -10,6 +10,7 @@ function populate(stndname,varname,htmlid){
 	$("#"+htmlid).html(def+options);
 }
 function getVariables(){
+	$("#datasets").css("border", "");
 	var id=$("#datasets").val();
 	if (id=="") return false;
 	console.log(id); 
@@ -22,24 +23,76 @@ function getVariables(){
 				varname.push(data.Variables[i].name);
 			}
 		}
-		populate(stndname,varname,"varid");
-			
+		populate(stndname,varname,"varid");	
 	});
 	$("#varid").attr("disabled",false);
 }
-
+var nextcanvasnr =0;
 function createCanvas(){
-	var canvasid = "chart" +$("canvas").length;
-	var divid = "canvasdiv" +$("canvas").length;
-	var canvasnr = $("canvas").length;
-	$("<div>").attr({id:divid}).appendTo("#graph");
+	var canvasid = "chart" +nextcanvasnr;
+	var divid = "canvasdiv" +nextcanvasnr;
+	
+	$("<div>").attr({id:divid}).click(modalFunc).appendTo("#graph");
 	$("<canvas>").attr({id:canvasid}).appendTo("#"+divid);
 	
-	
+	nextcanvasnr++;
 	return canvasid;
 }
+
+var currentevent;
+function modalFunc(event){
+	currentevent = event;
+	var targetid = event.target.id;
+	var ctx = $("#modalcontent");
+	var newgraph = new Chart(ctx,graphList[targetid].config);
+	$("#myModal").css("display","block");
+	$(".close").click(function(){
+		$("#myModal").css("display","none");
+		newgraph.destroy();
+	});
+	
+	$("#myModal").click(function(e){
+		if (e.target.id == "myModal"){
+			$("#myModal").css("display","none");
+			newgraph.destroy();
+		}
+
+		
+	});
+	$("#remove").click(function(){
+		removegraph(newgraph);
+	});
+	
+	/*
+	window.onclick =function(event){
+		if (event.target == $("#myModal")[0]){
+			$("#myModal").css("display","none");
+			newgraph.destroy();
+		}
+	}
+	*/
+}
+
+function removegraph(newgraph){
+	newgraph.destroy();
+	var chartid = currentevent.target.id;
+	console.log("canvasdiv"+chartid.substring(5));
+	$("#canvasdiv"+chartid.substring(5)).remove();
+	delete graphList[chartid];
+	if (Object.keys(graphList).length==0){
+		$("#graph").hide();
+	}
+	$("#myModal").css("display","none");
+	console.log(graphList);
+	$("#mapgraph").focus();
+	
+}
+
 function generateGraph(){
 	var input = getValues();
+	if (!input){
+		return false;
+	}
 	
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
@@ -51,67 +104,154 @@ function generateGraph(){
 		
 		for(var i=0;i<data.entries.length;i++){
 			values.push(data.entries[i].data[input.variable]);
-			time.push(new Date(data.entries[i].axes.time).toLocaleDateString());
+			time.push(data.entries[i].axes.time);
 		
 		}
-		
-		
+		/*
 		if (lastGraph!=null && moregraphs==false){
-			//lastGraph.destroy();
 			lastGraph.data.datasets[0].data=values;
-			lastGraph.data.datasets[1].data=values;
 			lastGraph.data.labels=time;
-			lastGraph.data.labels=time;
-			lastGraph.update();
 			
+			var graphType = $("input[name=optradio]:checked").val();
+			var data = lastGraph.data;
+			var ctx = lastGraph.chart.canvas;
+			lastGraph.destroy();
+			lastGraph=new Chart(ctx,{
+				type: graphType,
+				data:data,
+			});
+
+			lastGraph.update();
+			console.log(lastGraph);
+			//$("#mapgraph").animate({ scrollTop: $("#"+canvasid).offset().top}, "slow");
 			return false;
 		}
+		*/
 		
 		var canvasid = createCanvas();
-		createGraph(canvasid,values,time);
+		var modtime = modTime(time);
+		createGraph(canvasid,values,modtime);
 		moregraphs=false;
 		$("#graph").show();
-		location.href="#"+canvasid;
+		//location.href="#"+canvasid;
+		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).offset().top}, "slow");
+		
+		$("#mapgraph").focus();
+		console.log(graphList);
+		
 	});
 }
+
+function modTime(time){
+	var modTime=[]
+	for (var i =0;i<time.length;i++){
+		var year = time[i].substring(0,4);
+		var month = time[i].substring(5,7);
+		var day = time[i].substring(8,10);
+		var hours = time[i].substring(11,13);
+		var minutes = time[i].substring(14,16);
+		modTime.push(year+"/"+month+"/"+day+" "+hours+":"+minutes);
+		
+	}
+	return modTime;
+}
 function getValues(){
-	var start = $("#start").val();
+	var start = $("#StarT").val();
 	var end = $("#end").val();
 	var isoStart = "";
 	var isoEnd ="";
-	if (start!="") isoStart = new Date(start).toISOString();
-	console.log(new Date(start));
-	console.log(isoStart);
-	if (end!="") isoEnd = new Date(end).toISOString();
-	console.log(isoEnd);
+	var other=new Date(start);
+	var other2=new Date(end);
+	if (other >other2){
+		alert ("check the dates");
+		return false;
+	}
+	if (start!="")isoStart= new Date(other.getTime()- other.getTimezoneOffset()*60000).toISOString();
+	if (end!="") isoEnd = new Date(other2.getTime()- other2.getTimezoneOffset()*60000).toISOString();
+	var lat = latlngobj.lat;
+	var lng = latlngobj.lng;
+	if (lat ==""){
+		$("#mapdiv").css("border", "solid red");
+		return false;
+	}
+	var id = $("#datasets").val();
+	if (id=="default"){
+		$("#datasets").css("border", "solid red");
+		return false;
+	}
+	var variable = $("#varid").val();
+	if (variable=="default"){
+		$("#varid").css("border", "solid red");
+		return false;
+	}
+
+	
 	return {
-		id : $("#datasets").val(),
-		variable : $("#varid").val(),
-		lat : latlngobj.lat,
-		lng : latlngobj.lng,
+		id : id,
+		variable : variable,
+		lat : lat,
+		lng : lng,
 		start : isoStart,
 		end : isoEnd,
 		
-	};
-	
+	};	
 }
+$("#varid").on('change', function() {
+	$("#varid").css("border", "");
+});
+
+
 var moregraphs=false;
 function generateNewGraph(){
 	$("select#datasets").val("default");
 	$("select#varid").val("default");
-	$("#start").val("");
+	$("#StarT").val("");
 	$("#end").val("");
 	removeMarker();
 	$("#mapgraph").animate({ scrollTop: 0 }, "slow");
-	window.scrollTo(0, 0);
+	//window.scrollTo(0, 0);
 	$("#datasets").attr("disabled",true);
 	$("#varid").attr("disabled",true);
 	moregraphs=true;
 	
 	
 }
-var graphList= []
-var lastGraph;
+var graphList= {};
+//var lastGraph;
+function createGraph(id,values,time){
+	var ctx = $("#"+id);
+	var graphType = $("input[name=optradio]:checked").val();
+	var myChart = new Chart(ctx, {
+	type: graphType,
+	data: {
+		labels: time,
+		datasets: [{
+			label: $("#varid").val(),
+			data: values,
+			
+		}]
+	},
+	options: {
+		responsive:true,
+		maintainAspectRatio:false,
+		scales: {
+			yAxes: [{
+				ticks: {
+					//beginAtZero:true
+				},
+				scaleLabel: {
+					display:true,
+					labelString:"test"
+				}
+			}]
+		}
+	}
+	});
+	graphList[id]=myChart;
+	//lastGraph=myChart;
+}
+
+/*
 function createGraph(id,values,time){
 	var ctx = $("#"+id);
 	var myChart = new Chart(ctx, {
@@ -149,3 +289,4 @@ function createGraph(id,values,time){
 	graphList.push(myChart);
 	lastGraph=myChart;
 }
+*/

@@ -51,11 +51,12 @@ function removePolygon(){
 
 
 map.on("draw:drawstart", function(e){
-	console.log("drawstart");
+	//console.log("drawstart");
 });
 map.on("draw:drawstop", function(e){
 	$("#datasets").attr("disabled",false);
-	console.log("drawstop");
+	//console.log("drawstop");
+	$("#mapdiv").css("border", "1px solid");
 });
 map.on("draw:drawvertex", function(e){
 	console.log("drawvertex");
@@ -85,10 +86,9 @@ map.on('draw:created', function(e) {
 	layer=e.layer;
 	if(e.layerType=="marker"){
 		e.layer.options.draggable=true;
-		console.log(e.layer.getLatLng());
+		//console.log(e.layer.getLatLng());
 		latlngobj.lat=Math.round(e.layer.getLatLng().lat*1000)/1000;
 		latlngobj.lng=Math.round(e.layer.getLatLng().lng*1000)/1000;
-		console.log(latlngobj);
 		displayCoord([e.layer.getLatLng()]);		
 		e.layer.on("drag",function(e){
 			console.log("dragging");

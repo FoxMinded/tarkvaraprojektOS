@@ -20,6 +20,7 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js'></script>
 	
 	<link href="stylesheets/style.css" rel="stylesheet" />
+	<link href="stylesheets/modalCSS.css" rel="stylesheet" />
 	
 	<!-- Include Bootstrap Datepicker -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
@@ -30,16 +31,17 @@
 </head>
 <body>
 <script>
-
 $(document).ready(function() {
     $('#datePicker1')
         .datepicker({
+			
             format: 'mm/dd/yyyy'
+			
         })
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
-			
+			$('#datePicker1').datepicker('hide');
         });
 		$('#datePicker2')
         .datepicker({
@@ -48,8 +50,14 @@ $(document).ready(function() {
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
+			var st1= $("#StarT").val();
+			var end1=$("#end").val()
+			if (new Date(st1)<new Date(end1)){
+			$('#end').css("background-color","white");
+			$('#datePicker2').datepicker('hide');}else{
+			$('#end').css("background-color","pink");
+			}
         });
-
     
 });
 </script>
@@ -79,9 +87,9 @@ $(document).ready(function() {
 		<form id="eventForm" method="post" class="form-horizontal">
 		<div class="form-group">
         <p id="st">Start Date:</p>
-        <div id="startd" class="col-xs-5 date">
-            <div class="input-group input-append date" id="datePicker1">
-                <input type="text" class="form-control" name="date" id="start"/>
+        <div id="start" class="col-xs-5 date">
+            <div class="input-group input-append date" id="datePicker1" >
+                <input type="text" class="form-control" name="date" id="StarT"/>
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div>
@@ -93,7 +101,18 @@ $(document).ready(function() {
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div>
-    </div></form>
+		</div>
+		<form>
+		<p>Select graph style:</p>
+			<label class="radio-inline">
+				<input type="radio" name="optradio" value="bar" checked>Bar
+			</label>
+			<label class="radio-inline">
+				<input type="radio" name="optradio" value="line">Line
+			</label>
+		</form>
+	
+	</form>
 
 	</div >
 	<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>
@@ -102,7 +121,7 @@ $(document).ready(function() {
 
 
 
-<div id = "mapgraph">
+<div id = "mapgraph" tabindex="-1">
 	<div id="mapdiv" >
 		<div id="map">
 		<button class= "ui blue button" id="markerButton" type="button" >Mark a point</button>
@@ -112,7 +131,18 @@ $(document).ready(function() {
   		<p>Coordinates are (lat,lng):<span id="coordinates"></span> </p>
 	</div>
 	<!--graph-->
-	<div id="graph" >
+	<div id="graph"></div>
+	<div id="myModal" class="modal">
+		
+		<div class="modal-content"> 
+			<div id="modalgraph">
+			<span class="close">X</span>
+			<canvas id="modalcontent"></canvas>
+			</div>
+			<div id="modalbuttons">
+			<button class= "ui blue button" id="remove" type="button" >Remove</button>
+			</div>
+		</div>
 	</div>
 	<!--graph end -->
 

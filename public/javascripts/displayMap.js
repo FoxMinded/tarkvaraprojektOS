@@ -1,7 +1,7 @@
 
 L.mapbox.accessToken = 'pk.eyJ1IjoicGxhbmV0b3MiLCJhIjoiZjZkNDE4MTE5NWNhOGYyMmZhZmNhMDQwMDg0YWMyNGUifQ.htlwo6U82iekTcpGtDR_dQ';
 
-var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([39.00,34,00],2);  		
+var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([44.59,39.02],2);  		
 var zoomControl = L.control.zoom({position:"topright"});
 map.addControl(zoomControl);
 
@@ -17,6 +17,7 @@ var markerDraw = new L.Draw.Marker(map);
 
 $("#polyButton").on("click",drawPolygon);
 $("#markerButton").on("click",drawMarker);
+
 
 function drawMarker(){
 	markerDraw.enable();
@@ -55,6 +56,7 @@ map.on("draw:drawstart", function(e){
 map.on("draw:drawstop", function(e){
 	$("#datasets").attr("disabled",false);
 	//console.log("drawstop");
+	$("#mapdiv").css("border", "1px solid");
 });
 map.on("draw:drawvertex", function(e){
 	console.log("drawvertex");
@@ -87,10 +89,9 @@ map.on('draw:created', function(e) {
 		//console.log(e.layer.getLatLng());
 		latlngobj.lat=Math.round(e.layer.getLatLng().lat*1000)/1000;
 		latlngobj.lng=Math.round(e.layer.getLatLng().lng*1000)/1000;
-		//console.log(latlngobj);
 		displayCoord([e.layer.getLatLng()]);		
 		e.layer.on("drag",function(e){
-			//console.log("dragging");
+			console.log("dragging");
 			latlngobj.lat=Math.round(e.target.getLatLng().lat*1000)/1000;
 			latlngobj.lng=Math.round(e.target.getLatLng().lng*1000)/1000;
 			displayCoord([e.target.getLatLng()]);

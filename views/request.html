@@ -20,17 +20,17 @@
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js'></script>
 	
 	<link href="stylesheets/style.css" rel="stylesheet" />
+	<link href="stylesheets/modalCSS.css" rel="stylesheet" />
 	
 	<!-- Include Bootstrap Datepicker -->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
 
 </head>
 <body>
 <script>
-
 $(document).ready(function() {
     $('#datePicker1')
         .datepicker({
@@ -41,10 +41,11 @@ $(document).ready(function() {
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
-			var st1= $("#StarT").val();
+				var st1= $("#StarT").val();
 			var end1=$("#end").val()
 			
 			if (end1=="" || new Date(st1)< new Date(end1)){
+			$('#end').css("background-color","white");
 			$('#StarT').css("background-color","white");
 			$('#datePicker1').datepicker('hide');}else{
 				$('#StarT').css("background-color","pink");
@@ -60,34 +61,32 @@ $(document).ready(function() {
 			var st1= $("#StarT").val();
 			var end1=$("#end").val()
 			if (new Date(st1)<new Date(end1)){
+			$('#StarT').css("background-color","white");
 			$('#end').css("background-color","white");
 			$('#datePicker2').datepicker('hide');}else{
 			$('#end').css("background-color","pink");
 			}
         });
-
     
 });
 </script>
 <script>
 	$('.ui.dropdown').dropdown();
-	$('.ui.radio.checkbox')
-  .checkbox()
-;
 </script>
 <!--var-->
+
 <div id="vars">
 	<div id="div2" >
 		
 		<select  id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
-			<option default class="default">Select dataset</option>
+			<option value="default" class="default">Select dataset</option>
 			<option value="noaa_gfs_global_sflux_0.12d">noaa_gfs_global_sflux_0.12d</option>
 			<option value="noaa_icoads_enhanced_1d_day">noaa_icoads_enhanced_1d_day</option>
 			
 		</select>
 		
-		<select disabled="true" id="varid" class="ui fluid search dropdown" >
-			<option default class="default">Select variable</option>
+		<select disabled="false" id="varid" class="ui fluid search dropdown" >
+			<option value="default" class="default">Select variable</option>
 		</select>
 		<div id="cont" >
 		</div>
@@ -111,16 +110,17 @@ $(document).ready(function() {
                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
         </div>
-    </div>
-	<form>
-	<p>Select graph style:</p>
-    <label class="radio-inline">
-      <input type="radio" name="optradio">Bar
-    </label>
-    <label class="radio-inline">
-      <input type="radio" name="optradio">Line
-    </label>
-  </form>
+		</div>
+		<form>
+		<p>Select graph style:</p>
+			<label class="radio-inline">
+				<input type="radio" name="optradio" value="bar" checked>Bar
+			</label>
+			<label class="radio-inline">
+				<input type="radio" name="optradio" value="line">Line
+			</label>
+		</form>
+		
 	</form>
 
 	</div >
@@ -128,24 +128,36 @@ $(document).ready(function() {
 </div>
 <!--var end -->
 
-<!-- map -->
-<div id="mapdiv" >
-	
-  	
-	<div id="map">
-  	<button class= "ui blue button" id="markerButton" type="button" >Mark a point</button>
+
+
+<div id = "mapgraph" tabindex="-1">
+	<div id="mapdiv" >
+		<div id="map">
+		<button class= "ui blue button" id="markerButton" type="button" >Mark a point</button>
+		</div>
 	</div>
-	
-</div>
-<div id="coorddiv">
+	<div id="coorddiv">
   		<p>Coordinates are (lat,lng):<span id="coordinates"></span> </p>
+	</div>
+	<!--graph-->
+	<div id="graph"></div>
+	<div id="myModal" class="modal">
+		
+		<div class="modal-content"> 
+			<div id="modalgraph">
+			<span class="close">X</span>
+			<canvas id="modalcontent"></canvas>
+			</div>
+			<div id="modalbuttons">
+			<button class= "ui blue button" id="remove" type="button" >Remove</button>
+			</div>
+		</div>
+	</div>
+	<!--graph end -->
+
 </div>
-<!-- map end-->
-<!--graph-->
-<div id="graph" >
-	<canvas id="chart"></canvas>
-</div>
-<!--graph end -->
+<button  class= "ui blue button" id="addNewGraph" type="button" onclick="generateNewGraph()" >Add another graph</button>
+	
 
 <script src="javascripts/VarGraph.js"></script>
 <script src="javascripts/displayMap.js"></script>

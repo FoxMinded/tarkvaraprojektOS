@@ -1,3 +1,4 @@
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -84,3 +85,109 @@ input::-webkit-calendar-picker-indicator {
       margin-bottom:3%;
     }
 	
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+input::-webkit-calendar-picker-indicator {
+              opacity: 100;
+           }
+		
+  		.leaflet-control-attribution, leaflet-control {display:none}
+		.default {display:none}
+
+		#vars {
+			position:relative;
+			margin: 5px 5px 5px 5px;
+			
+			float:left;
+			width:45%;
+			height:100%;
+			
+		}
+		::-webkit-scrollbar {
+    display: none;
+}
+		#mapgraph {
+			margin: 5px 5px 5px 5px;
+			overflow:auto;
+			position:relative;
+			height:100%;
+			float:left;
+			width:53%;
+			
+		}
+		#mapdiv {
+			position:relative;
+			
+			border:1px solid;
+			
+			
+			height:40%;
+			
+		}
+		#map{ position:absolute; width:100%; height:100%; z-index:1}
+		
+		#markerButton {
+			margin-top:3px;
+			margin-left:3px;
+			
+			position:relative;
+			z-index:1
+		}
+		
+		#coorddiv {
+			
+		}
+		
+
+		
+		#graph{
+			height:55%;
+			width:100%;
+			display:none;
+			
+		}
+		#graph >div{
+			height:100%;
+			width:100%;
+			float:left;
+		}
+		
+		#generateGraph {
+			position:absolute;
+			bottom:10px;
+		}
+		#addNewGraph {
+			float:right;
+		}
+		[tabindex] {
+			outline: none !important;
+		}
+		#div1 {
+			margin-top:5%;
+		}
+    #st, #st1{
+      margin-left:4%;
+    }
+    #st1{
+      margin-top:4.5%;
+    }
+    #st{
+      margin-top:1.5%;
+    }
+    #st, #st1{
+      float:left; 
+    }
+    #start1{
+        margin-left:4px;
+        margin-top:3%;
+    }
+    #datasets{
+      margin-bottom:3%;
+    }
+

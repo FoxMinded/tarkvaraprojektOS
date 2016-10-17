@@ -1,7 +1,7 @@
 var key="?apikey=10efd8d786c74f93886d1a955afd758b";
 var url="http://api.planetos.com/v1/datasets";
 
-
+//puts variable names in the dropdown menu
 function populate(stndname,varname,htmlid){
 	var options="";
 	for(var i = 0; i < stndname.length; i++)
@@ -9,6 +9,7 @@ function populate(stndname,varname,htmlid){
 	var def = "<option value="+'default'+" class="+'default'+">"+'Select variable'+"</option>";
 	$("#"+htmlid).html(def+options);
 }
+//gets variable names that correspond to the  dataset name
 function getVariables(){
 	$("#datasets").css("border", "");
 	var id=$("#datasets").val();
@@ -27,6 +28,7 @@ function getVariables(){
 	});
 	$("#varid").attr("disabled",false);
 }
+//creates a reference for each chart object
 var nextcanvasnr =0;
 function createCanvas(){
 	var canvasid = "chart" +nextcanvasnr;
@@ -38,12 +40,24 @@ function createCanvas(){
 	nextcanvasnr++;
 	return canvasid;
 }
-
+// the modal screen opens up that takes from the targetid
 var currentevent;
 function modalFunc(event){
 	currentevent = event;
 	var targetid = event.target.id;
 	var ctx = $("#modalcontent");
+	//getting dataset value
+	//canvas.chartnr
+	//add values to the ids
+//	$("#d1").text("Dataset: \n"+dataList[targetid].id);
+
+	$("#d1").append('<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
+	//$("#v1").text(dataList[targetid].variable);
+	$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
+	$("#g1").text(dataList[targetid].style);
+	$("#a1").text("("+dataList[targetid].lng+","+dataList[targetid].lat+")");
+
+
 	var newgraph = new Chart(ctx,graphList[targetid].config);
 	$("#myModal").css("display","block");
 	$(".close").click(function(){
@@ -79,6 +93,7 @@ function removegraph(newgraph){
 	console.log("canvasdiv"+chartid.substring(5));
 	$("#canvasdiv"+chartid.substring(5)).remove();
 	delete graphList[chartid];
+	delete dataList[chartid];
 	if (Object.keys(graphList).length==0){
 		$("#graph").hide();
 	}
@@ -87,7 +102,7 @@ function removegraph(newgraph){
 	$("#mapgraph").focus();
 	
 }
-
+// gets values on the basis to do the chart
 function generateGraph(){
 	var input = getValues();
 	if (!input){
@@ -130,7 +145,7 @@ function generateGraph(){
 		
 		var canvasid = createCanvas();
 		var modtime = modTime(time);
-		createGraph(canvasid,values,modtime);
+		createGraph(canvasid,values,modtime,input);
 		moregraphs=false;
 		$("#graph").show();
 		//location.href="#"+canvasid;
@@ -141,7 +156,7 @@ function generateGraph(){
 		
 	});
 }
-
+//creates the right time format
 function modTime(time){
 	var modTime=[]
 	for (var i =0;i<time.length;i++){
@@ -155,6 +170,7 @@ function modTime(time){
 	}
 	return modTime;
 }
+//will get the values from the form and 
 function getValues(){
 	var start = $("#StarT").val();
 	var end = $("#end").val();
@@ -162,14 +178,13 @@ function getValues(){
 	var isoEnd ="";
 	var other=new Date(start);
 	var other2=new Date(end);
-	if (other >other2){
-		alert ("check the dates");
-		return false;
-	}
+	var graphType = $("input[name=optradio]:checked").val();
+	
 	if (start!="")isoStart= new Date(other.getTime()- other.getTimezoneOffset()*60000).toISOString();
 	if (end!="") isoEnd = new Date(other2.getTime()- other2.getTimezoneOffset()*60000).toISOString();
 	var lat = latlngobj.lat;
 	var lng = latlngobj.lng;
+	// will paint borders red when no values are put by the user
 	if (lat ==""){
 		$("#mapdiv").css("border", "solid red");
 		return false;
@@ -193,6 +208,7 @@ function getValues(){
 		lng : lng,
 		start : isoStart,
 		end : isoEnd,
+		style : graphType,
 		
 	};	
 }
@@ -200,7 +216,7 @@ $("#varid").on('change', function() {
 	$("#varid").css("border", "");
 });
 
-
+// creates a default form with everything empty. KAS SEDA ÜLDSE KASUTATAKSE KUSAGIL?-ei
 var moregraphs=false;
 function generateNewGraph(){
 	$("select#datasets").val("default");
@@ -217,8 +233,9 @@ function generateNewGraph(){
 	
 }
 var graphList= {};
+var dataList=[];
 //var lastGraph;
-function createGraph(id,values,time){
+function createGraph(id,values,time,input){
 	var ctx = $("#"+id);
 	var graphType = $("input[name=optradio]:checked").val();
 	var myChart = new Chart(ctx, {
@@ -241,13 +258,14 @@ function createGraph(id,values,time){
 				},
 				scaleLabel: {
 					display:true,
-					labelString:"test"
+					labelString:"test" // siia peaks tulema ühik
 				}
 			}]
 		}
 	}
 	});
 	graphList[id]=myChart;
+	dataList[id]=input;
 	//lastGraph=myChart;
 }
 

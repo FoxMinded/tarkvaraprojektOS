@@ -91,7 +91,7 @@ map.on('draw:created', function(e) {
 		latlngobj.lng=Math.round(e.layer.getLatLng().lng*1000)/1000;
 		displayCoord([e.layer.getLatLng()]);		
 		e.layer.on("drag",function(e){
-			console.log("dragging");
+			//console.log("dragging");
 			latlngobj.lat=Math.round(e.target.getLatLng().lat*1000)/1000;
 			latlngobj.lng=Math.round(e.target.getLatLng().lng*1000)/1000;
 			displayCoord([e.target.getLatLng()]);

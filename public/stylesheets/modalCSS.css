@@ -24,6 +24,15 @@
      overflow-wrap: break-word;
     word-break: break-all;
 }
+#combgraph {
+	overflow:auto;
+	width:100%;
+	height:100%;
+}
+#combgraph >canvas{
+	height:50%;
+	width:50%;
+}
 #modalgraph {
 	position:relative;
 	float:left;
@@ -43,7 +52,7 @@
     overflow-wrap: break-word;
     word-break: break-all;
     float:left;
-   
+    border-left:1px solid grey;
   
 }
 #inputInformation{

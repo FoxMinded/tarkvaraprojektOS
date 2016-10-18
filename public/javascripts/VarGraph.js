@@ -5,7 +5,7 @@ var url="http://api.planetos.com/v1/datasets";
 function populate(stndname,varname,htmlid){
 	var options="";
 	for(var i = 0; i < stndname.length; i++)
-		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? varname[i]:varname[i])+'</option>';
+		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? stndname[i]:stndname[i])+'</option>';
 	var def = "<option value="+'default'+" class="+'default'+">"+'Select variable'+"</option>";
 	$("#"+htmlid).html(def+options);
 }
@@ -20,7 +20,7 @@ function getVariables(){
 	$.getJSON(url+"/"+id+key, function(data){
 		for (var i = 0;i <data.Variables.length ; i++){
 			if (data.Variables[i].isData) {
-				stndname.push(data.Variables[i].standardName);
+				stndname.push(data.Variables[i].longName);
 				varname.push(data.Variables[i].name);
 			}
 		}
@@ -47,17 +47,19 @@ function modalFunc(event){
 	var targetid = event.target.id;
 	var ctx = $("#modalcontent");
 	//getting dataset value
-	$("#d1").append('<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
-	$("#v1").append("<p>"+dataList[targetid].variable+"<p>");
+	$("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
+	$("#v1").html("Variable:<p>"+dataList[targetid].variable+"<p>");
 	//$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
-	$("#g1").append("<p>"+dataList[targetid].style+"<p>");
-	$("#a1").append("<p>"+"("+dataList[targetid].lng+","+dataList[targetid].lat+")</p>");
+	$("#g1").html("Graph style:<p>"+dataList[targetid].style+"<p>");
+	$("#a1").html("Area:<p>"+"("+dataList[targetid].lng+","+dataList[targetid].lat+")</p>");
 
 
 	var newgraph = new Chart(ctx,graphList[targetid].config);
 	$("#myModal").css("display","block");
+	$('.close').off('click')
 	$(".close").click(function(){
 		$("#myModal").css("display","none");
+		console.log("Sth weird, please!");
 		newgraph.destroy();
 	});
 	
@@ -69,6 +71,7 @@ function modalFunc(event){
 
 		
 	});
+	$("#remove").off('click');
 	$("#remove").click(function(){
 		removegraph(newgraph);
 	});

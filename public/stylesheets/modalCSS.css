@@ -32,18 +32,18 @@
 }
 #modalbuttons{
 	margin-left:5px;
-	margin-top:20%;
+	margin-top:85%;
 	position:relative;
 	float:left;
 }
 
 #everythingElse{
+    width:30%;
+    height:100%;
     overflow-wrap: break-word;
     word-break: break-all;
     float:left;
-    overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+   
   
 }
 #inputInformation{

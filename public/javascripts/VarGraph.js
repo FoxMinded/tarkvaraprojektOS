@@ -47,15 +47,11 @@ function modalFunc(event){
 	var targetid = event.target.id;
 	var ctx = $("#modalcontent");
 	//getting dataset value
-	//canvas.chartnr
-	//add values to the ids
-//	$("#d1").text("Dataset: \n"+dataList[targetid].id);
-
 	$("#d1").append('<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
-	//$("#v1").text(dataList[targetid].variable);
-	$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
-	$("#g1").text(dataList[targetid].style);
-	$("#a1").text("("+dataList[targetid].lng+","+dataList[targetid].lat+")");
+	$("#v1").append("<p>"+dataList[targetid].variable+"<p>");
+	//$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
+	$("#g1").append("<p>"+dataList[targetid].style+"<p>");
+	$("#a1").append("<p>"+"("+dataList[targetid].lng+","+dataList[targetid].lat+")</p>");
 
 
 	var newgraph = new Chart(ctx,graphList[targetid].config);

@@ -68,7 +68,7 @@ input::-webkit-calendar-picker-indicator {
 		
 		#generateGraph {
 			position:absolute;
-			bottom:10px;
+			bottom:20px;
 		}
 		#addNewGraph {
 			float:right;
@@ -101,4 +101,8 @@ input::-webkit-calendar-picker-indicator {
 #feedback{
 	visibility:hidden;
 	width:80%;
+}
+
+#t1,#a1,#labels{
+	float:left;
 }

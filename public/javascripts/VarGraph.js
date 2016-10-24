@@ -57,11 +57,31 @@ function modalFunc(event){
 		return false;
 	}
 	//getting dataset value
-	$("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
-	$("#v1").html("Variable:<p>"+dataList[targetid].variable+"<p>");
+	  $("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
+	//$("#d1").html('<a class="ui grey tag label" href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+'</a>');
+	//$("#v1").html("Variable:<p>"+dataList[targetid].variable+"<p>");
 	//$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
-	$("#g1").html("Graph style:<p>"+dataList[targetid].style+"<p>");
-	$("#a1").html("Area:<p>"+"( "+dataList[targetid].lng+" ; "+dataList[targetid].lat+" )</p>");
+	//$("#g1").html("Graph style:<p>"+dataList[targetid].style+"<p>");
+	$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
+	//when in modal view make a new query to api about the general info on dataset
+	var datasetUrl = url+"/"+dataList[targetid].id+""+key;
+	
+	$.getJSON(datasetUrl,function(data){
+		var title= data.Title;
+		var source= data.Source;
+		var cat= data.Categories; // a list of categories the dataset belongs to
+		
+		//$("#t1").html(title);
+		//adding labels
+	var allLabels='<a class="ui purple tag label">'+source+'</a>'
+
+	for (i in cat){
+		allLabels+='<a class="ui teal tag label">'+cat[i]+'</a>';
+	}
+	$("#labels").html(allLabels);
+
+});
+
 
 	var ctx = $("#modalcontent");
 	var newgraph = new Chart(ctx,graphList[targetid].config);

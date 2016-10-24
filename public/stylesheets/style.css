@@ -98,3 +98,7 @@ input::-webkit-calendar-picker-indicator {
     #datasets{
       margin-bottom:3%;
     }
+#feedback{
+	visibility:hidden;
+	width:80%;
+}

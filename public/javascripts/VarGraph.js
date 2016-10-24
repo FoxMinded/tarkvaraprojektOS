@@ -139,7 +139,10 @@ function generateGraph(){
 	$.getJSON(currenturl,function(data){
 		var values=[];
 		var time=[];
-		
+		if (data.message=="Provided filter does not contain any data"){
+			$("#feedback").css('visibility', 'visible');
+			return;
+		}
 		for(var i=0;i<data.entries.length;i++){
 			values.push(data.entries[i].data[input.variable]);
 			time.push(data.entries[i].axes.time);

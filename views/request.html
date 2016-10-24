@@ -31,6 +31,15 @@
 <body>
 <script>
 $(document).ready(function() {
+	//$("#feedback").hide();
+	$('.message .close')
+  .on('click', function() {
+    $(this)
+      .closest('.message')
+      .transition('fade')
+    ;
+  })
+;
     $('#datePicker1')
         .datepicker({
 			
@@ -121,7 +130,13 @@ $(document).ready(function() {
 		</form>
 		
 	</form>
-
+	<div id="feedback" class="ui message" visibility="hidden">
+  <i class="close icon"></i>
+  <div class="header">
+    The query to API didn't give any results!
+  </div>
+  <p>Try again.</p>
+</div>
 	</div >
 	<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>
 </div>

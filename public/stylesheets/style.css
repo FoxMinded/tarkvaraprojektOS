@@ -1,3 +1,8 @@
+html{
+	margin:0;
+	padding:0;
+	height:100%;
+}
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -13,37 +18,27 @@ input::-webkit-calendar-picker-indicator {
   		.leaflet-control-attribution, leaflet-control {display:none}
 		.default {display:none}
 
-		#vars {
-			position:relative;
-			margin: 5px 5px 5px 5px;
-			
-			float:left;
-			width:45%;
-			height:100%;
-			
+#vars {
+		float:left;
+		width:40%;
+		height:100%;	
 		}
 		/*
 		::-webkit-scrollbar {
 			display: none;
 		}
 		*/
-		#mapgraph {
-			margin: 5px 5px 5px 5px;
+#mapgraph {		
 			overflow:auto;
 			position:relative;
 			height:100%;
 			float:left;
-			width:53%;
-			
+			width:60%;
 		}
-		#mapdiv {
+#mapdiv {
 			position:relative;
-			
 			border:1px solid;
-			
-			
 			height:40%;
-			
 		}
 		#map{ position:absolute; width:100%; height:100%; z-index:1}
 		
@@ -55,21 +50,19 @@ input::-webkit-calendar-picker-indicator {
 			z-index:1
 		}
 		
-		#coorddiv {
-			
-		}
-		
 
-		
 		#graph{
-			height:55%;
+			height:50%;
 			width:100%;
 			display:none;
 			
 		}
 		#graph >div{
-			height:100%;
-			width:100%;
+			height:50%;
+			width:50%;
+			margin-bottom: 5px;
+			min-height:175px;
+			min-width: 420px;
 			float:left;
 		}
 		

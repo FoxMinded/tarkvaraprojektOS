@@ -32,8 +32,7 @@
 <script>
 $(document).ready(function() {
 	//$("#feedback").hide();
-	$('.message .close')
-  .on('click', function() {
+	$('.message .close').on('click', function() {
     $(this)
       .closest('.message')
       .transition('fade')
@@ -161,7 +160,7 @@ $(document).ready(function() {
   <div class="header">
     The query to API didn't give any results!
   </div>
-  <p>Try again.</p>
+  
 </div>
 	</div >
 	<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>

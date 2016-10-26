@@ -46,6 +46,7 @@ function createCanvas(){
 // the modal screen opens up that takes from the targetid
 function modalFunc(event){
 	var targetid = event.target.id;
+	console.log();
 	if (Object.keys(combchart).length !== 0){
 		var previd = Object.keys(combchart)[0];
 		multigraphs(combchart[previd],graphList[targetid.slice(0,-1)].config);
@@ -57,11 +58,7 @@ function modalFunc(event){
 		return false;
 	}
 	//getting dataset value
-	  $("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
-	//$("#d1").html('<a class="ui grey tag label" href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+'</a>');
-	//$("#v1").html("Variable:<p>"+dataList[targetid].variable+"<p>");
-	//$("#t1").text(dataList[targetid].start+" - "+dataList[targetid].end);
-	//$("#g1").html("Graph style:<p>"+dataList[targetid].style+"<p>");
+	$("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
 	$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
 	//when in modal view make a new query to api about the general info on dataset
 	var datasetUrl = url+"/"+dataList[targetid].id+""+key;
@@ -71,7 +68,6 @@ function modalFunc(event){
 		var source= data.Source;
 		var cat= data.Categories; // a list of categories the dataset belongs to
 		
-		//$("#t1").html(title);
 		//adding labels
 	var allLabels='<a class="ui purple tag label">'+source+'</a>'
 
@@ -115,12 +111,23 @@ function modalFunc(event){
 		//ehitab mymodal2 olemasolevatest graafidest
 		for (var i=0;i<Object.keys(graphList).length;i++){
 			var canvasid= Object.keys(graphList)[i];
+			//kui graafikus on vaid 1 element, siis on modal tühi
+			if (canvasid != targetid){
 			var divid= "canvasdiv"+canvasid.substring(5)+num;
 			$("<div>").attr({id:divid}).appendTo("#combgraph");
 			$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
 			var ctx = $("#"+canvasid+num);
-			var copygraph = new Chart(ctx,graphList[canvasid].config);
-	
+			var copygraph = new Chart(ctx,graphList[canvasid].config);}
+		}
+		//if there's the modal view is empty then the modal view is shut and message would appear in the main view'
+		if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
+			console.log("the modal view is empty");
+			$("#myModal").css("display","none");
+			$("#myModal2").css("display","none");
+			//want to change the p elements value
+			$("#feedback").html("Nothing to combine the graph with!");
+			$("#feedback").css('visibility', 'visible');
+			return;
 		}
 		combine(targetid,newgraph);
 		$("#myModal2").css("display","block");
@@ -165,6 +172,7 @@ function generateGraph(){
 		var time=[];
 		// if there are no values in the query
 		if (data.message=="Provided filter does not contain any data"){
+			$("#feedback").html(" The query to API didn't give any results!");
 			$("#feedback").css('visibility', 'visible');
 			return;
 		}
@@ -179,6 +187,7 @@ function generateGraph(){
 		}
 		// if there are only null values in the query
 		if (values.length==0){
+			$("#feedback").html(" The query to API didn't give any results!");
 			$("#feedback").css('visibility', 'visible');
 			return;
 		}
@@ -257,20 +266,6 @@ $("#varid").on('change', function() {
 
 // creates a default form with everything empty. KAS SEDA ÜLDSE KASUTATAKSE KUSAGIL?-ei
 var moregraphs=false;
-function generateNewGraph(){
-	$("select#datasets").val("default");
-	$("select#varid").val("default");
-	$("#StarT").val("");
-	$("#end").val("");
-	removeMarker();
-	$("#mapgraph").animate({ scrollTop: 0 }, "slow");
-	//window.scrollTo(0, 0);
-	$("#datasets").attr("disabled",true);
-	$("#varid").attr("disabled",true);
-	moregraphs=true;
-	
-	
-}
 
 function randomColor(){
 	return "rgba("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+0.5+")";
@@ -333,6 +328,12 @@ function createGraph(id,values,time,input){
 }
 
 function multigraphs(c1,c2){
+	//can I compare two graphs and see if they are the same?
+	if (c1.data.labels==c2.data.labels){
+		console.log("same graphs, must do sth about it");
+	}
+
+
 	console.log(c1);
 	var id = createCanvas();
 	var ctx = $("#"+id);

@@ -49,7 +49,7 @@ function modalFunc(event){
 	console.log();
 	if (Object.keys(combchart).length !== 0){
 		var previd = Object.keys(combchart)[0];
-		multigraphs(combchart[previd],graphList[targetid.slice(0,-1)].config);
+		multigraphs(combchart[previd].config,graphList[targetid.slice(0,-1)].config);
 		$("#"+previd).on("click",modalFunc).css("border","");
 		combchart={};
 		$("#myModal2").css("display","none");
@@ -58,7 +58,8 @@ function modalFunc(event){
 		return false;
 	}
 	//getting dataset value
-	$("#d1").html('Dataset:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
+	if(dataList[targetid].multigraph==false){
+	$("#d1").html('<b>Dataset</b>:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
 	$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
 	//when in modal view make a new query to api about the general info on dataset
 	var datasetUrl = url+"/"+dataList[targetid].id+""+key;
@@ -76,7 +77,20 @@ function modalFunc(event){
 	}
 	$("#labels").html(allLabels);
 
-});
+});}else{
+	//1.datasetid eraldada ja linkidena manada
+	let datasets=dataList[targetid].id;
+	datasets= datasets.split(",");
+	datasets= Array.from(new Set(datasets));
+
+	let links=""
+	for (d in datasets){
+		if (datasets[d]!="undefined"){
+		links+='<a href="http://data.planetos.com/datasets/'+datasets[d]+'">'+datasets[d]+"</a>,"}
+	}
+	links=links.substring(0, links.length - 1)
+	$("#d1").html('<b>datasets</b>:'+links);
+}
 
 
 	var ctx = $("#modalcontent");
@@ -127,13 +141,16 @@ function modalFunc(event){
 			//want to change the p elements value
 			$("#feedback").html("Nothing to combine the graph with!");
 			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000)
 			return;
 		}
 		combine(targetid,newgraph);
 		$("#myModal2").css("display","block");
 	});
 }
-
+function fadeMessage(){
+	$("#feedback").css('visibility', 'hidden')
+}
 function removegraph(id,newgraph){
 	newgraph.destroy();
 	var chartid = id;
@@ -174,21 +191,20 @@ function generateGraph(){
 		if (data.message=="Provided filter does not contain any data"){
 			$("#feedback").html(" The query to API didn't give any results!");
 			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000)
 			return;
 		}
 		for(var i=0;i<data.entries.length;i++){
 			//not taking the values with null values
 			if (data.entries[i].data[input.variable]!= null){
 				values.push(data.entries[i].data[input.variable]);
-				time.push(data.entries[i].axes.time);}else{
-					console.log("found a value 'null'");
-				}
-		
+				time.push(data.entries[i].axes.time);}
 		}
 		// if there are only null values in the query
 		if (values.length==0){
 			$("#feedback").html(" The query to API didn't give any results!");
 			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000)
 			return;
 		}
 		
@@ -248,7 +264,6 @@ function getValues(){
 		return false;
 	}
 
-	
 	return {
 		id : id,
 		variable : variable,
@@ -257,14 +272,12 @@ function getValues(){
 		start : isoStart,
 		end : isoEnd,
 		style : graphType,
-		
+		multigraph : false
 	};	
 }
 $("#varid").on('change', function() {
 	$("#varid").css("border", "");
 });
-
-// creates a default form with everything empty. KAS SEDA ÜLDSE KASUTATAKSE KUSAGIL?-ei
 var moregraphs=false;
 
 function randomColor(){
@@ -281,6 +294,7 @@ function createGraph(id,values,time,input){
 	var ctx = $("#"+id);
 	var myChart = new Chart(ctx, {
 	type: graphType,
+	datasetName : input.id,
 	data: {
 		labels: time,
 		datasets: [{
@@ -328,13 +342,11 @@ function createGraph(id,values,time,input){
 }
 
 function multigraphs(c1,c2){
-	//can I compare two graphs and see if they are the same?
-	if (c1.data.labels==c2.data.labels){
-		console.log("same graphs, must do sth about it");
-	}
-
-
 	console.log(c1);
+	console.log(c2);
+	var id1=c1.datasetName;
+	var id2=c2.datasetName;
+	console.log("datasets:"+id1+" "+id2);
 	var id = createCanvas();
 	var ctx = $("#"+id);
 	var time1 = c1.data.labels;
@@ -362,6 +374,7 @@ function multigraphs(c1,c2){
 
 	var chart = new Chart(ctx,{
 		type: "bar",
+		datasetName : id1+","+id2,
 		data: {
 			labels: concattime,
 			datasets: [{
@@ -521,13 +534,14 @@ function multigraphs(c1,c2){
 	console.log("add newgraph to graphlist");
 	graphList[id]=chart;
 	dataList[id]={
-		id : "",
+		id : id1+","+id2,
 		variable : "",
 		lat : "",
 		lng : "",
 		start : "",
 		end : "",
 		style : "",
+		multigraph : true
 		
 	};
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
@@ -617,44 +631,3 @@ function multigraphs(c1,c2){
 	
 	graphList[id]=myChart;
 }
-
-
-/*
-function createGraph(id,values,time){
-	var ctx = $("#"+id);
-	var myChart = new Chart(ctx, {
-	type: 'bar',
-	data: {
-		labels: time,
-		datasets: [{
-			type:"bar",
-			label: "bar label",
-			data: values,
-			},
-			{
-			type:"line",
-			label: "line label",
-			data: values,
-			}
-			]
-		},
-	options: {
-		responsive:true,
-		maintainAspectRatio:false,
-		scales: {
-			yAxes: [{
-				ticks: {
-					//beginAtZero:true
-				},
-				scaleLabel: {
-					display:true,
-					labelString:"test"
-				}
-			}]
-		}
-	}
-	});
-	graphList.push(myChart);
-	lastGraph=myChart;
-}
-*/

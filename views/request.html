@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JavaScript assignment</title>
+    <title>Climate Dashboard</title>
 	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
     <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/jquery.min.js"></script>
 	<script src="javascripts/Chart.min.js"> </script>
@@ -31,14 +31,7 @@
 <body>
 <script>
 $(document).ready(function() {
-	//$("#feedback").hide();
-	$('.message .close').on('click', function() {
-    $(this)
-      .closest('.message')
-      .transition('fade')
-    ;
-  })
-;
+	
     $('#datePicker1')
         .datepicker({
             format: 'mm/dd/yyyy',
@@ -49,19 +42,7 @@ $(document).ready(function() {
 			todayHighlight:true,
         })
         .on('changeDate', function(e) {
-            // Revalidate the date field
-            //$('#eventForm').formValidation('revalidateField', 'date');
-			/*
-			var st1= $("#StarT").val();
-			var end1=$("#end").val()
-			
-			if (end1=="" || new Date(st1)< new Date(end1)){
-			$('#end').css("background-color","white");
-			$('#StarT').css("background-color","white");
-			$('#datePicker1').datepicker('hide');}else{
-				$('#StarT').css("background-color","pink");
-			}
-			*/
+            
 			var startdate;
 			if (e.dates.length===0){
 				startdate="";
@@ -79,18 +60,7 @@ $(document).ready(function() {
 			todayHighlight:true,
         })
         .on('changeDate', function(e) {
-            // Revalidate the date field
-            //$('#eventForm').formValidation('revalidateField', 'date');
-			/*
-			var st1= $("#StarT").val();
-			var end1=$("#end").val()
-			if (new Date(st1)<new Date(end1)){
-			$('#StarT').css("background-color","white");
-			$('#end').css("background-color","white");
-			$('#datePicker2').datepicker('hide');}else{
-			$('#end').css("background-color","pink");
-			}
-			*/
+           
 			var enddate;
 			if (e.dates.length===0){
 				enddate="";
@@ -184,24 +154,22 @@ $(document).ready(function() {
 		
 		<div class="modal-content"> 
 			<div id="modalgraph">
+			<div id="modalbuttons">
+				<button class= "ui small blue button" id="remove" type="button" >Remove</button>
+				<button class= "ui small blue button" id="combine" type="button" >Combine</button>
 				<span class="close">X</span>
+			</div>
+				
 				<canvas id="modalcontent"></canvas>
 			</div>
 			
 			<div id="everythingElse" >
-			
-			
-				
 				<p id="t1"><p>
 				<p id="a1"></p>
-					
 				<div id="labels"></div>
 				</br>
 				<p id="d1"></p>
-			<div id="modalbuttons">
-				<button class= "ui small blue button" id="remove" type="button" >Remove</button>
-				<button class= "ui small blue button" id="combine" type="button" >Combine</button>
-			</div>
+			
 			</div>
 		</div>
 	</div>

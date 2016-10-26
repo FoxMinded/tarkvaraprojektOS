@@ -163,35 +163,25 @@ function generateGraph(){
 	$.getJSON(currenturl,function(data){
 		var values=[];
 		var time=[];
+		// if there are no values in the query
 		if (data.message=="Provided filter does not contain any data"){
 			$("#feedback").css('visibility', 'visible');
 			return;
 		}
 		for(var i=0;i<data.entries.length;i++){
-			values.push(data.entries[i].data[input.variable]);
-			time.push(data.entries[i].axes.time);
+			//not taking the values with null values
+			if (data.entries[i].data[input.variable]!= null){
+				values.push(data.entries[i].data[input.variable]);
+				time.push(data.entries[i].axes.time);}else{
+					console.log("found a value 'null'");
+				}
 		
 		}
-		/*
-		if (lastGraph!=null && moregraphs==false){
-			lastGraph.data.datasets[0].data=values;
-			lastGraph.data.labels=time;
-			
-			var graphType = $("input[name=optradio]:checked").val();
-			var data = lastGraph.data;
-			var ctx = lastGraph.chart.canvas;
-			lastGraph.destroy();
-			lastGraph=new Chart(ctx,{
-				type: graphType,
-				data:data,
-			});
-
-			lastGraph.update();
-			console.log(lastGraph);
-			//$("#mapgraph").animate({ scrollTop: $("#"+canvasid).offset().top}, "slow");
-			return false;
+		// if there are only null values in the query
+		if (values.length==0){
+			$("#feedback").css('visibility', 'visible');
+			return;
 		}
-		*/
 		
 		var canvasid = createCanvas();
 		var modtime = modTime(time);
@@ -379,7 +369,6 @@ function multigraphs(c1,c2){
 				data: clone,
 				yAxisID:"y-axis-0",
 				fill:false,
-				backgroundColor: "#8EEBEC",
 				backgroundColor: c1.data.datasets[0].backgroundColor,
 				borderColor: c1.data.datasets[0].borderColor,
 				

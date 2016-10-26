@@ -97,6 +97,9 @@ function modalFunc(event){
 			$("#myModal").css("display","none");
 			$("#myModal2").css("display","none");
 			newgraph.destroy();
+			combchart={};
+			$("#combgraph").empty();
+			
 		}
 
 		
@@ -111,11 +114,13 @@ function modalFunc(event){
 		var num = 0;
 		//ehitab mymodal2 olemasolevatest graafidest
 		for (var i=0;i<Object.keys(graphList).length;i++){
-			var canvasid= Object.keys(graphList)[i]
-			$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#combgraph");
+			var canvasid= Object.keys(graphList)[i];
+			var divid= "canvasdiv"+canvasid.substring(5)+num;
+			$("<div>").attr({id:divid}).appendTo("#combgraph");
+			$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
 			var ctx = $("#"+canvasid+num);
 			var copygraph = new Chart(ctx,graphList[canvasid].config);
-			console.log("kopeeritud:" , copygraph);
+	
 		}
 		combine(targetid,newgraph);
 		$("#myModal2").css("display","block");
@@ -141,7 +146,6 @@ var combchart={};
 function combine(id,newgraph){
 	newgraph.destroy();
 	$("#myModal").css("display","none");
-	$("#"+id).css("border","1px solid red").off("click");
 	combchart[id] = graphList[id];
 }
 
@@ -194,7 +198,7 @@ function generateGraph(){
 		createGraph(canvasid,values,modtime,input);
 		moregraphs=false;
 		$("#graph").show();
-		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).offset().top}, "slow");
+		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).position().top}, "slow");
 		
 		$("#mapgraph").focus();
 		console.log(graphList);
@@ -277,6 +281,10 @@ function generateNewGraph(){
 	
 	
 }
+
+function randomColor(){
+	return "rgba("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+0.5+")";
+}
 var graphList= {};
 var dataList=[];
 //var lastGraph;
@@ -284,17 +292,20 @@ function createGraph(id,values,time,input){
 	var index = document.getElementById("varid").selectedIndex;
 	var unit = units[(index-1)];
 	var graphType = $("input[name=optradio]:checked").val();
+	var color=randomColor();
 	var ctx = $("#"+id);
 	var myChart = new Chart(ctx, {
-	type: "bar",
+	type: graphType,
 	data: {
 		labels: time,
 		datasets: [{
 			type: graphType,
-			label: $("#varid").val(),
+			label: $("#varid option:selected").text(),
 			data: values,
 			yAxisID:"y-axis-0",
 			fill:false,
+			backgroundColor:color,
+			borderColor:color,
 		}]
 	},
 	options: {
@@ -304,6 +315,7 @@ function createGraph(id,values,time,input){
 			yAxes: [{
 				ticks: {
 					//beginAtZero:true
+					//min:Math.round(Math.min(...values)-1),
 				},
 				scaleLabel: {
 					display:true,
@@ -341,7 +353,7 @@ function multigraphs(c1,c2){
 	var clone = JSON.parse(JSON.stringify(data1));
 	for (var i=0;i<concattime.length;i++){
 		if (time1.indexOf(concattime[i])===-1){
-			clone.splice(i,0,null);
+			clone.splice(i,0,NaN);
 		}
 		
 	}
@@ -368,6 +380,8 @@ function multigraphs(c1,c2){
 				yAxisID:"y-axis-0",
 				fill:false,
 				backgroundColor: "#8EEBEC",
+				backgroundColor: c1.data.datasets[0].backgroundColor,
+				borderColor: c1.data.datasets[0].borderColor,
 				
 			}]
 		},
@@ -392,7 +406,7 @@ function multigraphs(c1,c2){
 					},
 					scaleLabel: {
 						display:true,
-						labelString:""
+						labelString:unit11
 					},
 					id:"y-axis-1",
 					display:false,
@@ -402,106 +416,132 @@ function multigraphs(c1,c2){
 		}
 	});
 	
-	if (unit2 === unit1){
+	if (c1.data.datasets.length>1){
 		
-		var clone = JSON.parse(JSON.stringify(c2.data.datasets[0].data));
-		for (var i=0;i<concattime.length;i++){
-			if (time2.indexOf(concattime[i])===-1){
-				clone.splice(i,0,null);
-			}
-		
-		}
-		console.log("unit võrdsed c2",clone)
-		var dataset = {
-			fill:false,
-			label: c2.data.datasets[0].label,
-			type: c2.data.datasets[0].type,
-			yAxisID: c2.data.datasets[0].yAxisID,
-			data: clone,
-		};
-		chart.data.datasets.push(dataset);
-		chart.update();
-		graphList[id]=chart;
-		dataList[id]={
-			id : "",
-			variable : "",
-			lat : "",
-			lng : "",
-			start : "",
-			end : "",
-			style : "",
-			
-		};
-		
-	}
-	else if (unit2 !== unit1){
-		if(unit2===unit11 || unit11===""){
-			var clone = JSON.parse(JSON.stringify(c2.data.datasets[0].data));
-			for (var i=0;i<concattime.length;i++){
-				if (time2.indexOf(concattime[i])===-1){
-					clone.splice(i,0,null);
+		for (var i=1;i<c1.data.datasets.length;i++){
+			var data11 = c1.data.datasets[i].data;
+			var label11 = c1.data.datasets[i].label;
+			var type11 = c1.data.datasets[i].type;
+			var clone = JSON.parse(JSON.stringify(data11));
+			for (var j=0;j<concattime.length;j++){
+				if (time1.indexOf(concattime[j])===-1){
+					clone.splice(j,0,NaN);
 				}
-			
+		
 			}
-			console.log("unit ei ole võrdsed c2",clone);
-			var dataset = {
-				fill:false,
-				label: c2.data.datasets[0].label,
-				type: c2.data.datasets[0].type,
-				yAxisID: "y-axis-1",
-				data: clone,
-			};
-			chart.options.scales.yAxes[1].display=true;
-			chart.options.scales.yAxes[1].scaleLabel.labelString=unit2
-			chart.data.datasets.push(dataset);
-			chart.update();
-			graphList[id]=chart;
-			dataList[id]={
-				id : "",
-				variable : "",
-				lat : "",
-				lng : "",
-				start : "",
-				end : "",
-				style : "",
-				
-			};
-		}
-		else {
-			console.log("teise charti unit ei ühildu kummagi esimese charti omaga");
-			return false;
-		}
-	}
-	if (unit22===""){
-		console.log("c2 yaxis unit on tühi");
-		return false;
-	}
-	else {
-		console.log("ei");
-		if (unit22 === unit1) {
+			console.log("data11 ", clone);
 			
-			chart.data.datasets.push(c2.data.datasets[1]);
-			chart.update();
-			graphList[id]=chart;
-			return false;
-		}
-		else {
-			if(unit22 === unit11 || unit11===""){
-				c2.data.datasets[1].yAxisID="y-axis-1";
-				
-				chart.options.scales.yAxes[0].display=true;
-				chart.options.scales.yAxes[0].scaleLabel.labelString=unit22
-				chart.data.datasets.push(c2.data.datasets[1]);
+			var dataset = {
+					fill:false,
+					label:label11,
+					type:type11,
+					yAxisID:c1.data.datasets[i].yAxisID,
+					data:clone,
+					backgroundColor: c1.data.datasets[i].backgroundColor,
+					borderColor: c1.data.datasets[i].borderColor,
+			};
+			if (c1.data.datasets[0].yAxisID===c1.data.datasets[i].yAxisID){
+				chart.data.datasets.push(dataset);
 				chart.update();
-				graphList[id]=chart;
-				return false;
+			}
+			else { //chart 1's on 2 graafi ja mõlemal erinev ühik
+				chart.options.scales.yAxes[i].display=true;
+				chart.options.scales.yAxes[i].scaleLabel.labelString=unit11;
+				chart.data.datasets.push(dataset);
+				chart.update();
+				
+			}
+		}
+	}
+	
+	
+	
+	for (var i=0;i<c2.data.datasets.length;i++){
+		var data2 = c2.data.datasets[i].data;
+		var label2 = c2.data.datasets[i].label;
+		var type2 = c2.data.datasets[i].type;
+		var clone = JSON.parse(JSON.stringify(data2));
+		for (var j=0;j<concattime.length;j++){
+			if (time2.indexOf(concattime[j])===-1){
+				clone.splice(j,0,NaN);
+			}
+		}
+		console.log("data2 ",clone);
+		var dataset = {
+				fill:false,
+				label:label2,
+				type:type2,
+				yAxisID:c2.data.datasets[i].yAxisID,
+				data:clone,
+				backgroundColor: c2.data.datasets[i].backgroundColor,
+				borderColor: c2.data.datasets[i].borderColor,
+		};
+		
+		
+		if (c2.data.datasets[i].yAxisID === c1.data.datasets[0].yAxisID){ //y-axis-0==y-axis-0
+			console.log("c2 dataset on vaskapoolsel y-teljel");
+			if ( unit2 === unit1 ){
+				console.log("unit2 == unit1")
+				chart.data.datasets.push(dataset);
+				chart.update();
+				continue;
+			}
+			else if (unit2 === unit11 || unit11==="") {
+				dataset.yAxisID="y-axis-1";
+				console.log("unit2==unit11 või unit11==''");
+				chart.options.scales.yAxes[1].display=true;
+				chart.options.scales.yAxes[1].scaleLabel.labelString=unit2;
+				chart.data.datasets.push(dataset);
+				chart.update();
+				continue;
 			}
 			else {
-				console.log("teise charti teise graafi unit ei ühildu kummagi esimese charti omaga");
+				console.log("c2 dataset[i] ei saa panna kummalegi y-teljele");
+				chart.destroy();
+				$("#canvasdiv"+id.substring(5)).remove();
+				return false;
+			}
+		}
+		else { //y-axis-1==y-axis-1
+			console.log("c2 dataset on parempoolsel y-teljel");
+			if ( unit22 === unit1 ){
+				console.log("unit22==unit1");
+				dataset.yAxisID="y-axis-0"; //või c1.data.datasets[0].yAxisID - unit1 y-axis id
+				chart.data.datasets.push(dataset);
+				chart.update();
+				continue;
+			}
+			else if (unit22 === unit11 || unit11==="") {
+				console.log("unit22==unit11 või unit11==''");
+				dataset.yAxisID="y-axis-1";
+				chart.options.scales.yAxes[1].display=true;
+				chart.options.scales.yAxes[1].scaleLabel.labelString=unit22;
+				chart.data.datasets.push(dataset);
+				chart.update();
+				continue;
+			}
+			else {
+				console.log("c2 dataset[i] ei saa panna kummalegi y-teljele");
+				chart.destroy();
+				$("#canvasdiv"+id.substring(5)).remove();
 				return false;
 			}
 		}
 	}
+	console.log("add newgraph to graphlist");
+	graphList[id]=chart;
+	dataList[id]={
+		id : "",
+		variable : "",
+		lat : "",
+		lng : "",
+		start : "",
+		end : "",
+		style : "",
+		
+	};
+	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
+	return false;
 	console.log("siia ei tohiks jõuda");
 	var data1 = c1.data.datasets[0].data;
 	var data2 = c2.data.datasets[0].data;
@@ -513,7 +553,7 @@ function multigraphs(c1,c2){
 	var time2 = c2.data.labels;
 	
 	var id = createCanvas();
-	$("#mapgraph").animate({ scrollTop: $("#"+id).offset().top}, "slow");
+	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	var fromzero=false;
 	if (Math.max(...data1)<1) {
 		fromzero=true;

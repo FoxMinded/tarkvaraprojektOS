@@ -42,14 +42,18 @@ $(document).ready(function() {
 ;
     $('#datePicker1')
         .datepicker({
-			
-            format: 'mm/dd/yyyy'
-			
+            format: 'mm/dd/yyyy',
+			startDate:"",
+			endDate:"",
+			autoclose:true,
+			toggleActive:true,
+			todayHighlight:true,
         })
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
-				var st1= $("#StarT").val();
+			/*
+			var st1= $("#StarT").val();
 			var end1=$("#end").val()
 			
 			if (end1=="" || new Date(st1)< new Date(end1)){
@@ -58,14 +62,27 @@ $(document).ready(function() {
 			$('#datePicker1').datepicker('hide');}else{
 				$('#StarT').css("background-color","pink");
 			}
+			*/
+			var startdate;
+			if (e.dates.length===0){
+				startdate="";
+			}
+			else {
+				startdate = new Date(e.date.valueOf());
+			}
+			$("#datePicker2").datepicker("setStartDate",startdate);
         });
 		$('#datePicker2')
         .datepicker({
-            format: 'mm/dd/yyyy'
+            format: 'mm/dd/yyyy',
+			autoclose:true,
+			toggleActive:true,
+			todayHighlight:true,
         })
         .on('changeDate', function(e) {
             // Revalidate the date field
             //$('#eventForm').formValidation('revalidateField', 'date');
+			/*
 			var st1= $("#StarT").val();
 			var end1=$("#end").val()
 			if (new Date(st1)<new Date(end1)){
@@ -74,6 +91,15 @@ $(document).ready(function() {
 			$('#datePicker2').datepicker('hide');}else{
 			$('#end').css("background-color","pink");
 			}
+			*/
+			var enddate;
+			if (e.dates.length===0){
+				enddate="";
+			}
+			else {
+				enddate = new Date(e.date.valueOf());
+			}
+			$("#datePicker1").datepicker("setEndDate",enddate);
         });
     
 });
@@ -181,8 +207,9 @@ $(document).ready(function() {
 		</div>
 	</div>
 	<div id="myModal2" class="modal">
-		<div class="modal-content" height="100%" width="100%">
+		<div class="modal-content">
 			<div id="combgraph">
+				<span class="close">X</span>
 			</div>
 		</div>
 	</div>

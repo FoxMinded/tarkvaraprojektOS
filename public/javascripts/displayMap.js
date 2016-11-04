@@ -22,7 +22,8 @@ $("#markerButton").on("click",drawMarker);
 function drawMarker(){
 	markerDraw.enable();
 	$("#markerButton").text("Remove mark");
-	$("#markerButton").off('click').on('click', removeMarker);
+	$("#markerButton").off('click');
+	//$("#markerButton").off('click').on('click', removeMarker);
 }
 function removeMarker(){
 	$("#markerButton").text("Mark a point");
@@ -57,6 +58,7 @@ map.on("draw:drawstop", function(e){
 	$("#datasets").attr("disabled",false);
 	//console.log("drawstop");
 	$("#mapdiv").css("border", "1px solid");
+	$("#markerButton").on('click', removeMarker);
 });
 map.on("draw:drawvertex", function(e){
 	console.log("drawvertex");

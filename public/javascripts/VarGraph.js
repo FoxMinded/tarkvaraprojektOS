@@ -50,7 +50,6 @@ function modalFunc(event){
 	if (Object.keys(combchart).length !== 0){
 		var previd = Object.keys(combchart)[0];
 		multigraphs(combchart[previd].config,graphList[targetid.slice(0,-1)].config);
-		$("#"+previd).on("click",modalFunc).css("border","");
 		combchart={};
 		$("#myModal2").css("display","none");
 		$("#combgraph").empty();
@@ -96,10 +95,14 @@ function modalFunc(event){
 	var ctx = $("#modalcontent");
 	var newgraph = new Chart(ctx,graphList[targetid].config);
 	$("#myModal").css("display","block");
+	
 	$('.close').off('click')
 	$(".close").click(function(){
 		$("#myModal").css("display","none");
+		$("#myModal2").css("display", "none");
 		newgraph.destroy();
+		combchart={};
+		$("#combgraph").empty();
 	});
 	
 	$("#myModal, #myModal2").click(function(e){
@@ -127,13 +130,13 @@ function modalFunc(event){
 			var canvasid= Object.keys(graphList)[i];
 			//kui graafikus on vaid 1 element, siis on modal tühi
 			if (canvasid != targetid){
-			var divid= "canvasdiv"+canvasid.substring(5)+num;
-			$("<div>").attr({id:divid}).appendTo("#combgraph");
-			$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
-			var ctx = $("#"+canvasid+num);
-			var copygraph = new Chart(ctx,graphList[canvasid].config);}
-		}
-		//if there's the modal view is empty then the modal view is shut and message would appear in the main view'
+				var divid= "canvasdiv"+canvasid.substring(5)+num;
+				$("<div>").attr({id:divid}).appendTo("#combgraph");
+				$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
+				var ctx = $("#"+canvasid+num);
+				var copygraph = new Chart(ctx,graphList[canvasid].config);}
+			}
+		//if the the modal view is empty then the modal view is shut and message would appear in the main view'
 		if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
 			console.log("the modal view is empty");
 			$("#myModal").css("display","none");
@@ -318,7 +321,7 @@ function createGraph(id,values,time,input){
 				},
 				scaleLabel: {
 					display:true,
-					labelString:unit // siia peaks tulema ühik - siia tuli ühik RL
+					labelString:unit 
 				}
 			},
 			{
@@ -343,7 +346,6 @@ function createGraph(id,values,time,input){
 
 function multigraphs(c1,c2){
 	console.log(c1);
-	console.log(c2);
 	var id1=c1.datasetName;
 	var id2=c2.datasetName;
 	console.log("datasets:"+id1+" "+id2);
@@ -502,6 +504,9 @@ function multigraphs(c1,c2){
 				console.log("c2 dataset[i] ei saa panna kummalegi y-teljele");
 				chart.destroy();
 				$("#canvasdiv"+id.substring(5)).remove();
+				$("#feedback").html("Can't add graph - units are different");
+				$("#feedback").css('visibility', 'visible');
+				setTimeout(fadeMessage,7000);
 				return false;
 			}
 		}
@@ -546,88 +551,4 @@ function multigraphs(c1,c2){
 	};
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	return false;
-	console.log("siia ei tohiks jõuda");
-	var data1 = c1.data.datasets[0].data;
-	var data2 = c2.data.datasets[0].data;
-	var label1 = c1.data.datasets[0].label;
-	var label2 = c2.data.datasets[0].label;
-	var type1 = c1.type;
-	var type2 = c2.type;
-	var time1 = c1.data.labels;
-	var time2 = c2.data.labels;
-	
-	var id = createCanvas();
-	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
-	var fromzero=false;
-	if (Math.max(...data1)<1) {
-		fromzero=true;
-	}
-	var ctx = $("#"+id);
-	var myChart = new Chart(ctx, {
-		type: "bar",
-		data: {
-			labels: time1,
-			datasets: [{
-			  type: type1,
-			  label: label1,
-			  fill:false,
-			  yAxisID: "y-axis-0",
-			  data: data1,
-			  backgroundColor: "#8EEBEC",
-			  borderColor: "#8EEBEC",
-			  spanGaps:true //if null value, line doesn't cut
-			  
-			}, {
-			  type: type2,
-			  label: label2,
-			  fill:false,
-			  yAxisID: "y-axis-1",
-			  data: data2,
-			  backgroundColor: "#ED908E",
-			  borderColor: "#ED908E",
-			  spanGaps:true
-			}]
-		},
-		options: {
-			title: {
-				display:true,
-				text: "combo chart",
-			},
-			scales: {
-			  yAxes: [{
-				position: "left",
-				id: "y-axis-0",
-				gridLines: {
-				  display:false
-			    },
-				ticks: {
-					beginAtZero:fromzero
-				},
-
-			  }, {
-				position: "right",
-				id: "y-axis-1",
-				gridLines: {
-				  display:false
-			    }
-			  }],
-			}
-		}
-	});
-	if(c1.data.datasets.length>1){
-		var confX = {
-			type: c1.data.datasets[1].type,
-			label: c1.data.datasets[1].label,
-			fill:false,
-			//yAxisID: "y-axis-0",
-			data: c1.data.datasets[1].data,
-			backgroundColor: "#00FF00",
-			borderColor: "#00FF00",
-			spanGaps:true
-		};
-		myChart.data.datasets.push(confX);
-		myChart.update();
-	}
-	
-	graphList[id]=myChart;
 }

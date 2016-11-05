@@ -1,5 +1,5 @@
 module.exports = {
-  'Test: successfully generating 1 graph, confirming modal view' : function (client) {
+  'Test: successfully combining 2 graphs' : function (client) {
     client
 		.url('http://tarkvaraprojektos.herokuapp.com/')
 		.waitForElementPresent('body', 1000)
@@ -9,19 +9,27 @@ module.exports = {
 		.pause(1000)
 		.click('select[id="datasets"] option[value="noaa_gfs_global_sflux_0.12d"]')
 		.pause(2000)
-		.assert.containsText('#datasets','GFS global weather forecast by NCEP. Near surface parameters.')
 		.click('select[id="varid"] option[value="Maximum_temperature_height_above_ground_3_Hour_Interval"]')
-		.pause(2000)
-		.assert.containsText('#varid','Maximum temperature (3_Hour Interval) @ Specified height level above ground')
 		.pause(2000)
 		.click('#generateGraph')
 		.pause(5000)
+        //.click('select[id="datasets"] option[value="noaa_gfs_global_sflux_0.12d"]')
+        //.pause.(1000)
+        .click('select[id="varid"] option[value="Maximum_temperature_height_above_ground_6_Hour_Interval"]')
+        .pause(1000)
+        .click('#generateGraph')
+        .pause(1000)
 		.assert.visible('#graph')
 		.pause(5000)
-		.click('#chart0')
+		.click('#chart1')
 		.pause(2000)
 		.assert.visible('#myModal')
 		.pause(5000)
+        .click('#combine')
+        .pause(4000)
+        .click("#chart00")
+        .pause(1000)
+        .assert.elementPresent('#chart2')
 		.end();
 		
   }

@@ -1,5 +1,8 @@
+/*
+*       TODO: add one test about wrong area (sea dataset in land); combine graph when only 1 graph exists 
+*/
 module.exports = {
-  'Test: successfully generating 1 graph, confirming modal view' : function (client) {
+  'Predicitive dataset: wrong dates' : function (client) {
     client
 		.url('http://tarkvaraprojektos.herokuapp.com/')
 		.waitForElementPresent('body', 1000)
@@ -14,14 +17,13 @@ module.exports = {
 		.pause(2000)
 		.assert.containsText('#varid','Maximum temperature (3_Hour Interval) @ Specified height level above ground')
 		.pause(2000)
+        //aeg
+        .setValue('#StarT','10/10/2016')
+        .setValue('#end','10/26/2016')
 		.click('#generateGraph')
-		.pause(5000)
-		.assert.visible('#graph')
-		.pause(5000)
-		.click('#chart0')
-		.pause(2000)
-		.assert.visible('#myModal')
-		.pause(5000)
+		.assert.elementPresent('#feedback')
+		
+		.pause(500)
 		.end();
 		
   }

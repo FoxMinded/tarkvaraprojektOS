@@ -1,6 +1,7 @@
 module.exports = {
-  'Test: successfully generating 1 graph, confirming modal view' : function (client) {
+  'Test: successfully removing a graph' : function (client) {
     client
+    //generating a graph
 		.url('http://tarkvaraprojektos.herokuapp.com/')
 		.waitForElementPresent('body', 1000)
 		.click('#markerButton')
@@ -22,6 +23,11 @@ module.exports = {
 		.pause(2000)
 		.assert.visible('#myModal')
 		.pause(5000)
+        //clicking on remove button
+        .click('#remove')
+        .pause(1000)
+        .assert.elementNotPresent('#chart0')
+        .pause(1000)
 		.end();
 		
   }

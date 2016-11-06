@@ -9,8 +9,6 @@ addons:
   firefox: "23.0"
 services:
   - selenium
-before_script:
+script:
   - "export DISPLAY=:99.0"
-  - "/etc/init.d/xvfb start"
-after_script:
-  - "/etc/init.d/xvfb stop"
+  - xvfb-run --server-args="-ac" npm test

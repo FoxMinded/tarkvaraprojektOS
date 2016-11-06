@@ -6,9 +6,9 @@ node_js:
   - "0.11"
   - "0.10"
 addons:
-  firefox: "23.0"
+  firefox: "49.0"
 services:
   - selenium
 script:
   - "export DISPLAY=:99.0"
-  - xvfb-run --server-args="-ac" npm test
+  - xvfb-run npm test

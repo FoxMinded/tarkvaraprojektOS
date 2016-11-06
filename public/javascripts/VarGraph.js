@@ -98,6 +98,7 @@ function modalFunc(event){
 	
 	$('.close').off('click')
 	$(".close").click(function(){
+		$("#linkAddress1").css('visibility', 'visible');
 		$("#myModal").css("display","none");
 		$("#myModal2").css("display", "none");
 		newgraph.destroy();
@@ -107,6 +108,7 @@ function modalFunc(event){
 	
 	$("#myModal, #myModal2").click(function(e){
 		if (e.target.id == "myModal" || e.target.id=="myModal2"){
+			$("#linkAddress1").css('visibility', 'visible');
 			$("#myModal").css("display","none");
 			$("#myModal2").css("display","none");
 			newgraph.destroy();
@@ -121,7 +123,10 @@ function modalFunc(event){
 	$("#remove").click(function(){
 		removegraph(targetid,newgraph);
 	});
-	
+	$("#getLink1").off('click');
+	$("#getLink1").click(function(){
+		getLink(targetid);
+	});
 	$("#combine").off("click");
 	$("#combine").click(function(){
 		var num = 0;
@@ -551,4 +556,11 @@ function multigraphs(c1,c2){
 	};
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	return false;
+}
+function getLink(chartid){
+	//the hidden input field appears and it has the address
+	$("#linkAddress1").css('visibility', 'visible');
+	//it seems that I have to stringify 
+	//console.log(String(graphList[chartid].config));
+	$("#linkAddress1").val("http://tarkvaraprojektos.herokuapp.com/graph/...");
 }

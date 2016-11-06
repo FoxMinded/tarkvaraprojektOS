@@ -13,4 +13,5 @@ router.get('/',function(req,res){
 //     path.resolve(app.get('appPath') + '/index.html')
 
 });*/
+
 module.exports = router;

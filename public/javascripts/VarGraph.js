@@ -5,7 +5,7 @@ var url="http://api.planetos.com/v1/datasets";
 function populate(stndname,varname,htmlid){
 	var options="";
 	for(var i = 0; i < stndname.length; i++)
-		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? stndname[i]:stndname[i])+'</option>';
+		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? varname[i]:stndname[i])+'</option>';
 	var def = "<option value="+'default'+" class="+'default'+">"+'Select variable'+"</option>";
 	$("#"+htmlid).html(def+options);
 }

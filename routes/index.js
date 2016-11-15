@@ -3,8 +3,17 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('request.html', { title: 'ejs' });
+ 
+  res.render('request.ejs', { theMonsterInput: "666" });
 }); 
+router.get('/:sth', function(req, res, next) {
+    var sth=JSON.parse(req.params.sth);
+
+     res.render('request.ejs', { theMonsterInput: JSON.stringify(sth) });
+     
+  //res.send('about time...'+sth);
+  //res.render('request.html',{GraphObject: sth});
+});
 //assuming app is express Object.
 /*
 router.get('/',function(req,res){

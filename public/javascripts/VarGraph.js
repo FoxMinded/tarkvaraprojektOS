@@ -173,12 +173,58 @@ function removegraph(id,newgraph){
 	$("#mapgraph").focus();
 	
 }
-
+function decode(str) {
+			return str.replace(/&#(\d+);/g, function(match, dec) {
+				return String.fromCharCode(dec);
+			});
+		}
 var combchart={};
 function combine(id,newgraph){
 	newgraph.destroy();
 	$("#myModal").css("display","none");
 	combchart[id] = graphList[id];
+}
+function generateGraphPermaVersion(input){
+	input=decode(input);
+	input=JSON.parse(input);
+	// Solve the undefined problem
+	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
+						input.lat+"&lon="+input.lng+
+						"&start="+input.start+"&end="+input.end+"&count=20";
+	
+	$.getJSON(currenturl,function(data){
+		var values=[];
+		var time=[];
+		// if there are no values in the query
+		if (data.message=="Provided filter does not contain any data"){
+			$("#feedback").html(" The query to API didn't give any results!");
+			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000)
+			return;
+		}
+		for(var i=0;i<data.entries.length;i++){
+			//not taking the values with null values
+			if (data.entries[i].data[input.variable]!= null){
+				values.push(data.entries[i].data[input.variable]);
+				time.push(data.entries[i].axes.time);}
+		}
+		// if there are only null values in the query
+		if (values.length==0){
+			$("#feedback").html(" The query to API didn't give any results!");
+			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000)
+			return;
+		}
+		
+		var canvasid = createCanvas();
+		var modtime = modTime(time);
+		createGraph(canvasid,values,modtime,input);
+		moregraphs=false;
+		$("#graph").show();
+		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).position().top}, "slow");
+		$("#mapgraph").focus();
+		
+	});
 }
 
 // gets values on the basis to do the chart
@@ -297,7 +343,7 @@ var dataList=[];
 function createGraph(id,values,time,input){
 	var index = document.getElementById("varid").selectedIndex;
 	var unit = units[(index-1)];
-	var graphType = $("input[name=optradio]:checked").val();
+	var graphType = input.style;
 	var color=randomColor();
 	var ctx = $("#"+id);
 	var myChart = new Chart(ctx, {
@@ -307,7 +353,7 @@ function createGraph(id,values,time,input){
 		labels: time,
 		datasets: [{
 			type: graphType,
-			label: $("#varid option:selected").text(),
+			label: $("#varid option[value='"+input.variable+"'] ").text(), // see peaks andma mulle muutuja nime
 			data: values,
 			yAxisID:"y-axis-0",
 			fill:false,
@@ -560,7 +606,12 @@ function multigraphs(c1,c2){
 function getLink(chartid){
 	//the hidden input field appears and it has the address
 	$("#linkAddress1").css('visibility', 'visible');
+	var partData1=JSON.stringify(dataList[chartid]); //see if I need to make it even more piecy
+	//var partData2=JSON.stringify(graphList[chartid].config.data.datasets);// might have multiple objects in the Array
+	
+	//var CompleteOne=partType+"&&&"+partDatasetName+"&&&"+partData1+"&&&"+JSON.stringify(DatasetsArray)+"&&&"+partOptions;
+	console.log(partData1);
 	//it seems that I have to stringify 
 	//console.log(String(graphList[chartid].config));
-	$("#linkAddress1").val("http://tarkvaraprojektos.herokuapp.com/graph/...");
+	$("#linkAddress1").val("http://tarkvaraprojektos.herokuapp.com/"+partData1);
 }

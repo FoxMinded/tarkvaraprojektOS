@@ -179,25 +179,11 @@ function combine(id,newgraph){
 	$("#myModal").css("display","none");
 	combchart[id] = graphList[id];
 }
-function checkingValuesFromAPI1(data){
-	if (data.message=="Provided filter does not contain any data"){
+function checkingValuesFromAPI1(){
 		$("#feedback").html(" The query to API didn't give any results!");
 		$("#feedback").css('visibility', 'visible');
 		setTimeout(fadeMessage,7000)
-		return true;
-		}
-		return false
 }
-function checkingValuesFromAPI2(data){
-	if (data.length==0){
-		$("#feedback").html(" The query to API didn't give any results!");
-		$("#feedback").css('visibility', 'visible');
-		setTimeout(fadeMessage,7000)			
-		return true;
-		}
-		return false;
-}
-
 
 // gets values on the basis to do the chart
 function generateGraph(){
@@ -213,7 +199,8 @@ function generateGraph(){
 		var values=[];
 		var time=[];
 		// if there are no values in the query
-		if (checkingValuesFromAPI1(data)){
+		if (data.message=="Provided filter does not contain any data"){
+			checkingValuesFromAPI1();
 			return; //nothing to generate a graph of
 		}
 		for(var i=0;i<data.entries.length;i++){ 
@@ -223,7 +210,8 @@ function generateGraph(){
 				time.push(data.entries[i].axes.time);}
 			}
 			// if there are only null values in the query
-			if (checkingValuesFromAPI2(data)){
+			if (values.length==0){
+				checkingValuesFromAPI1();
 				return;
 			}
 		

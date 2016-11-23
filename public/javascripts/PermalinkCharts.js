@@ -10,7 +10,8 @@ function generateGraphPermaVersion(input){
 		var values=[];
 		var time=[];
 		// if there are no values in the query
-		if (checkingValuesFromAPI1(data)){
+		if (data.message=="Provided filter does not contain any data"){
+			checkingValuesFromAPI1();
 			return; //nothing to generate a graph of
 		}
 		for(var i=0;i<data.entries.length;i++){
@@ -19,8 +20,9 @@ function generateGraphPermaVersion(input){
 				values.push(data.entries[i].data[input.variable]);
 				time.push(data.entries[i].axes.time);}
 		}
-		if (checkingValuesFromAPI2(data)){
-			return;
+		if (values.length==0){
+				checkingValuesFromAPI1();
+				return;
 		}
 		
 		var canvasid = createCanvas();

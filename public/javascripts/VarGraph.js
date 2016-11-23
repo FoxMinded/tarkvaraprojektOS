@@ -9,6 +9,7 @@ function populate(stndname,varname,htmlid){
 	var def = "<option value="+'default'+" class="+'default'+">"+'Select variable'+"</option>";
 	$("#"+htmlid).html(def+options);
 }
+
 //gets variable names that correspond to the  dataset name
 var units=[];
 function getVariables(){
@@ -19,6 +20,7 @@ function getVariables(){
 	var stndname =[];
 	var varname = [];
 	units=[];
+	console.log(url+"/"+id+key);
 	$.getJSON(url+"/"+id+key, function(data){
 		for (var i = 0;i <data.Variables.length ; i++){
 			if (data.Variables[i].isData) {
@@ -46,7 +48,6 @@ function createCanvas(){
 // the modal screen opens up that takes from the targetid
 function modalFunc(event){
 	var targetid = event.target.id;
-	console.log();
 	if (Object.keys(combchart).length !== 0){
 		var previd = Object.keys(combchart)[0];
 		multigraphs(combchart[previd].config,graphList[targetid.slice(0,-1)].config);
@@ -66,96 +67,89 @@ function modalFunc(event){
 	$.getJSON(datasetUrl,function(data){
 		var title= data.Title;
 		var source= data.Source;
-		var cat= data.Categories; // a list of categories the dataset belongs to
-		
-		//adding labels
-	var allLabels='<a class="ui purple tag label">'+source+'</a>'
+		var category= data.Categories; 
+		var allLabels='<a class="ui purple tag label">'+source+'</a>'
+		for (i in category){
+			allLabels+='<a class="ui teal tag label">'+category[i]+'</a>';
+		}
+		$("#labels").html(allLabels);
 
-	for (i in cat){
-		allLabels+='<a class="ui teal tag label">'+cat[i]+'</a>';
-	}
-	$("#labels").html(allLabels);
-
-});}else{
+	});}else{
 	//1.datasetid eraldada ja linkidena manada
-	let datasets=dataList[targetid].id;
-	datasets= datasets.split(",");
-	datasets= Array.from(new Set(datasets));
+		let datasets=dataList[targetid].id;
+		datasets= datasets.split(",");
+		datasets= Array.from(new Set(datasets));
+		let links=""
+		for (d in datasets){
+			if (datasets[d]!="undefined"){
+				links+='<a href="http://data.planetos.com/datasets/'+datasets[d]+'">'+datasets[d]+"</a>,"}
+			}
+			links=links.substring(0, links.length - 1)
+			$("#d1").html('<b>datasets</b>:'+links);
+		}
 
-	let links=""
-	for (d in datasets){
-		if (datasets[d]!="undefined"){
-		links+='<a href="http://data.planetos.com/datasets/'+datasets[d]+'">'+datasets[d]+"</a>,"}
-	}
-	links=links.substring(0, links.length - 1)
-	$("#d1").html('<b>datasets</b>:'+links);
-}
 
-
-	var ctx = $("#modalcontent");
-	var newgraph = new Chart(ctx,graphList[targetid].config);
-	$("#myModal").css("display","block");
-	
-	$('.close').off('click')
-	$(".close").click(function(){
-		$("#linkAddress1").css('visibility', 'visible');
-		$("#myModal").css("display","none");
-		$("#myModal2").css("display", "none");
-		newgraph.destroy();
-		combchart={};
-		$("#combgraph").empty();
-	});
-	
-	$("#myModal, #myModal2").click(function(e){
-		if (e.target.id == "myModal" || e.target.id=="myModal2"){
-			$("#linkAddress1").css('visibility', 'visible');
+		var ctx = $("#modalcontent");
+		var newgraph = new Chart(ctx,graphList[targetid].config);
+		$("#myModal").css("display","block");
+		
+		$('.close').off('click')
+		$(".close").click(function(){
+			$('#linkAddress1').clone().attr('type','hidden').insertAfter('#linkAddress1').prev().remove();
 			$("#myModal").css("display","none");
-			$("#myModal2").css("display","none");
+			$("#myModal2").css("display", "none");
 			newgraph.destroy();
 			combchart={};
 			$("#combgraph").empty();
-			
-		}
-
+		});
 		
-	});
-	$("#remove").off('click');
-	$("#remove").click(function(){
-		removegraph(targetid,newgraph);
-	});
-	$("#getLink1").off('click');
-	$("#getLink1").click(function(){
-		getLink(targetid);
-	});
-	$("#combine").off("click");
-	$("#combine").click(function(){
-		var num = 0;
-		//ehitab mymodal2 olemasolevatest graafidest
-		for (var i=0;i<Object.keys(graphList).length;i++){
-			var canvasid= Object.keys(graphList)[i];
-			//kui graafikus on vaid 1 element, siis on modal tühi
-			if (canvasid != targetid){
-				var divid= "canvasdiv"+canvasid.substring(5)+num;
-				$("<div>").attr({id:divid}).appendTo("#combgraph");
-				$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
-				var ctx = $("#"+canvasid+num);
-				var copygraph = new Chart(ctx,graphList[canvasid].config);}
+		$("#myModal, #myModal2").click(function(e){
+			if (e.target.id == "myModal" || e.target.id=="myModal2"){
+				$('#linkAddress1').clone().attr('type','hidden').insertAfter('#linkAddress1').prev().remove();
+				$("#myModal").css("display","none");
+				$("#myModal2").css("display","none");
+				newgraph.destroy();
+				combchart={};
+				$("#combgraph").empty();	
 			}
-		//if the the modal view is empty then the modal view is shut and message would appear in the main view'
-		if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
-			console.log("the modal view is empty");
-			$("#myModal").css("display","none");
-			$("#myModal2").css("display","none");
-			//want to change the p elements value
-			$("#feedback").html("Nothing to combine the graph with!");
-			$("#feedback").css('visibility', 'visible');
-			setTimeout(fadeMessage,7000)
-			return;
-		}
-		combine(targetid,newgraph);
-		$("#myModal2").css("display","block");
-	});
-}
+		});
+		$("#remove").off('click');
+		$("#remove").click(function(){
+			removegraph(targetid,newgraph);
+		});
+		$("#getLink1").off('click');
+		$("#getLink1").click(function(){
+			getLink(targetid);
+		});
+		$("#combine").off("click");
+		$("#combine").click(function(){
+			var num = 0;
+			//ehitab mymodal2 olemasolevatest graafidest
+			for (var i=0;i<Object.keys(graphList).length;i++){
+				var canvasid= Object.keys(graphList)[i];
+				//kui graafikus on vaid 1 element, siis on modal tühi
+				if (canvasid != targetid){
+					var divid= "canvasdiv"+canvasid.substring(5)+num;
+					$("<div>").attr({id:divid}).appendTo("#combgraph");
+					$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
+					var ctx = $("#"+canvasid+num);
+					var copygraph = new Chart(ctx,graphList[canvasid].config);}
+				}
+			//if the the modal view is empty then the modal view is shut and message would appear in the main view'
+			if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
+				console.log("the modal view is empty");
+				$("#myModal").css("display","none");
+				$("#myModal2").css("display","none");
+				//want to change the p elements value
+				$("#feedback").html("Nothing to combine the graph with!");
+				$("#feedback").css('visibility', 'visible');
+				setTimeout(fadeMessage,7000)
+				return;
+			}
+			combine(targetid,newgraph);
+			$("#myModal2").css("display","block");
+		});
+	}
 function fadeMessage(){
 	$("#feedback").css('visibility', 'hidden')
 }
@@ -174,58 +168,36 @@ function removegraph(id,newgraph){
 	
 }
 function decode(str) {
-			return str.replace(/&#(\d+);/g, function(match, dec) {
-				return String.fromCharCode(dec);
-			});
-		}
+	return str.replace(/&#(\d+);/g, function(match, dec) {
+		return String.fromCharCode(dec);
+		});
+	}
+
 var combchart={};
 function combine(id,newgraph){
 	newgraph.destroy();
 	$("#myModal").css("display","none");
 	combchart[id] = graphList[id];
 }
-function generateGraphPermaVersion(input){
-	input=decode(input);
-	input=JSON.parse(input);
-	// Solve the undefined problem
-	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
-						input.lat+"&lon="+input.lng+
-						"&start="+input.start+"&end="+input.end+"&count=20";
-	
-	$.getJSON(currenturl,function(data){
-		var values=[];
-		var time=[];
-		// if there are no values in the query
-		if (data.message=="Provided filter does not contain any data"){
-			$("#feedback").html(" The query to API didn't give any results!");
-			$("#feedback").css('visibility', 'visible');
-			setTimeout(fadeMessage,7000)
-			return;
+function checkingValuesFromAPI1(data){
+	if (data.message=="Provided filter does not contain any data"){
+		$("#feedback").html(" The query to API didn't give any results!");
+		$("#feedback").css('visibility', 'visible');
+		setTimeout(fadeMessage,7000)
+		return true;
 		}
-		for(var i=0;i<data.entries.length;i++){
-			//not taking the values with null values
-			if (data.entries[i].data[input.variable]!= null){
-				values.push(data.entries[i].data[input.variable]);
-				time.push(data.entries[i].axes.time);}
-		}
-		// if there are only null values in the query
-		if (values.length==0){
-			$("#feedback").html(" The query to API didn't give any results!");
-			$("#feedback").css('visibility', 'visible');
-			setTimeout(fadeMessage,7000)
-			return;
-		}
-		
-		var canvasid = createCanvas();
-		var modtime = modTime(time);
-		createGraph(canvasid,values,modtime,input);
-		moregraphs=false;
-		$("#graph").show();
-		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).position().top}, "slow");
-		$("#mapgraph").focus();
-		
-	});
+		return false
 }
+function checkingValuesFromAPI2(data){
+	if (data.length==0){
+		$("#feedback").html(" The query to API didn't give any results!");
+		$("#feedback").css('visibility', 'visible');
+		setTimeout(fadeMessage,7000)			
+		return true;
+		}
+		return false;
+}
+
 
 // gets values on the basis to do the chart
 function generateGraph(){
@@ -233,7 +205,6 @@ function generateGraph(){
 	if (!input){
 		return false;
 	}
-	
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
 						"&start="+input.start+"&end="+input.end+"&count=20";
@@ -242,25 +213,19 @@ function generateGraph(){
 		var values=[];
 		var time=[];
 		// if there are no values in the query
-		if (data.message=="Provided filter does not contain any data"){
-			$("#feedback").html(" The query to API didn't give any results!");
-			$("#feedback").css('visibility', 'visible');
-			setTimeout(fadeMessage,7000)
-			return;
+		if (checkingValuesFromAPI1(data)){
+			return; //nothing to generate a graph of
 		}
-		for(var i=0;i<data.entries.length;i++){
+		for(var i=0;i<data.entries.length;i++){ 
 			//not taking the values with null values
 			if (data.entries[i].data[input.variable]!= null){
 				values.push(data.entries[i].data[input.variable]);
 				time.push(data.entries[i].axes.time);}
-		}
-		// if there are only null values in the query
-		if (values.length==0){
-			$("#feedback").html(" The query to API didn't give any results!");
-			$("#feedback").css('visibility', 'visible');
-			setTimeout(fadeMessage,7000)
-			return;
-		}
+			}
+			// if there are only null values in the query
+			if (checkingValuesFromAPI2(data)){
+				return;
+			}
 		
 		var canvasid = createCanvas();
 		var modtime = modTime(time);
@@ -340,9 +305,35 @@ function randomColor(){
 var graphList= {};
 var dataList=[];
 //var lastGraph;
+var labelAndUnit=""
+function dummy(lu){
+	labelAndUnit=lu;
+}
+function makeRequest(id,variable){ 
+	$.getJSON(url+"/"+id+key, function(data){
+		for (var i = 0;i <data.Variables.length ; i++){
+			if (data.Variables[i].isData && data.Variables[i].name==variable) {
+				labelAndUnit+=data.Variables[i].longName+";"+data.Variables[i].unit;
+				break;
+			}}
+			dummy(labelAndUnit);
+			}
+		);
+} 
+
 function createGraph(id,values,time,input){
 	var index = document.getElementById("varid").selectedIndex;
-	var unit = units[(index-1)];
+	var lableName= $("#varid option[value='"+input.variable+"'] ").text()
+	if (lableName==""){
+		lableName= input.variable
+	}
+	var unit = units[(index-1)]; // check if UNDEFINED
+	if (unit == undefined){
+		var APIkutse= makeRequest(input.id, input.variable);
+		APIkutse=labelAndUnit.split(";");
+		unit= APIkutse[1]
+		lableName= APIkutse[0]
+	}
 	var graphType = input.style;
 	var color=randomColor();
 	var ctx = $("#"+id);
@@ -353,7 +344,7 @@ function createGraph(id,values,time,input){
 		labels: time,
 		datasets: [{
 			type: graphType,
-			label: $("#varid option[value='"+input.variable+"'] ").text(), // see peaks andma mulle muutuja nime
+			label: lableName, // see peaks andma mulle muutuja nime
 			data: values,
 			yAxisID:"y-axis-0",
 			fill:false,
@@ -604,14 +595,9 @@ function multigraphs(c1,c2){
 	return false;
 }
 function getLink(chartid){
-	//the hidden input field appears and it has the address
-	$("#linkAddress1").css('visibility', 'visible');
-	var partData1=JSON.stringify(dataList[chartid]); //see if I need to make it even more piecy
-	//var partData2=JSON.stringify(graphList[chartid].config.data.datasets);// might have multiple objects in the Array
-	
-	//var CompleteOne=partType+"&&&"+partDatasetName+"&&&"+partData1+"&&&"+JSON.stringify(DatasetsArray)+"&&&"+partOptions;
-	console.log(partData1);
-	//it seems that I have to stringify 
-	//console.log(String(graphList[chartid].config));
+	console.log("muudan input kasti avatuks");
+	$('#linkAddress1').clone().attr('type','text').insertAfter('#linkAddress1').prev().remove();
+	//$("#linkAddress1").css('type', 'text');
+	var partData1=JSON.stringify(dataList[chartid]); 
 	$("#linkAddress1").val("http://tarkvaraprojektos.herokuapp.com/"+partData1);
 }

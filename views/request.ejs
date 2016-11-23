@@ -1,214 +1,151 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Climate Dashboard</title>
-	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
-    <script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/jquery.min.js"></script>
-	<script src="javascripts/Chart.min.js"> </script>
-	
-	
-	
-	<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
-  	<link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
-  	
-	
-  	<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
-	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
-	
-
-	<link href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css' rel='stylesheet' />
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js'></script>
-	
-	<link href="stylesheets/style.css" rel="stylesheet" />
-	<link href="stylesheets/modalCSS.css" rel="stylesheet" />
-	
-	<!-- Include Bootstrap Datepicker -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
-
-</head>
-<body>
-<script>
-$(document).ready(function() {
-	var inputMonster= "<%= theMonsterInput %>";
-	
-	if (inputMonster == 666){
-		console.log("No inputMonster ");
-		}
-		else{
-		console.log("There is an inputMonster");
-		console.log(inputMonster);
-		// TODO:
-		// 1. make a function that takes this object as an argument. Output: chart in the app 
-		generateGraphPermaVersion(inputMonster);
-		}
-    $('#datePicker1')
-        .datepicker({
-            format: 'mm/dd/yyyy',
-			startDate:"",
-			endDate:"",
-			autoclose:true,
-			toggleActive:true,
-			todayHighlight:true,
-        })
-        .on('changeDate', function(e) {
-            
-			var startdate;
-			if (e.dates.length===0){
-				startdate="";
-			}
-			else {
-				startdate = new Date(e.date.valueOf());
-			}
-			$("#datePicker2").datepicker("setStartDate",startdate);
-        });
-		$('#datePicker2')
-        .datepicker({
-            format: 'mm/dd/yyyy',
-			autoclose:true,
-			toggleActive:true,
-			todayHighlight:true,
-        })
-        .on('changeDate', function(e) {
-           
-			var enddate;
-			if (e.dates.length===0){
-				enddate="";
-			}
-			else {
-				enddate = new Date(e.date.valueOf());
-			}
-			$("#datePicker1").datepicker("setEndDate",enddate);
-        });
-    
-});
-</script>
-<script>
-	$('.ui.dropdown').dropdown();
-</script>
-<!--var-->
-
-<div id="vars">
-	<div id="div2" >
+	<head>
+		<title>Climate Dashboard</title>
 		
-		<select  id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
-			<option value="default" class="default">Select dataset</option>
-			<option value="noaa_gfs_global_sflux_0.12d">GFS global weather forecast by NCEP. Near surface parameters.</option>
-			<option value="noaa_icoads_enhanced_1d_day">International Comprehensive Ocean-Atmosphere Data Set, Monthly Summary Statistics, 1&deg</option>
-			<option value="noaa-ncep_gefs">Global Ensemble Forecast System (GEFS)</option>
-			<option value="metno_harmonie_metcoop">MET Norway HARMONIE Forecast</option>
-			<option value="noaa_nam_awips_12">North American Mesoscale Forecast System (NAM): CONUS Full Complement Of Surface-Based Fields - 12 Km</option>
-			<option value="noaa_nam_alaska">North American Mesoscale Forecast System (NAM): Alaska Nest - 6 Km</option>
-			<option value="noaa_aqfs_avg_1h_o3_conus">National Air Quality Forecast System (AQFS): 1-Hour Average Ozone CONUS</option>
-			<option value="noaa_aqfs_pm25_bc_conus">National Air Quality Forecast System (AQFS): Bias Corrected PM2.5 CONUS</option>
-			<option value="noaa_ww3_global_1.25x1d">NOAA Wave Watch III (NWW3) Ocean Wave Model</option>
-			<option value="hycom_glbu0.08_91.2_global_0.08d">HYCOM (Hybrid Coordinate Ocean Model) Global Ocean Forecast</option>
-			<option value="noaa_rtofs_surface_1h_diag">Global Real-Time Ocean Forecast System (RTOFS) - 2D Surface 1 Hourly Diagnostic Forecast</option>
-		</select>
+		<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+		<script src="http://cdn.jsdelivr.net/webjars/jquery/2.2.0/jquery.min.js"></script>
+		<script src="javascripts/Chart.min.js"> </script>
 		
-		<select disabled="false" id="varid" class="ui fluid search dropdown" >
-			<option value="default" class="default">Select variable</option>
-		</select>
-		<div id="cont" >
-		</div>
-	</div>
-	<div id="div1">
+		<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+		<link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
 		
-		<form id="eventForm" method="post" class="form-horizontal">
-		<div class="form-group">
-        <p id="st">Start Date:</p>
-        <div id="start" class="col-xs-5 date">
-            <div class="input-group input-append date" id="datePicker1" >
-                <input type="text" class="form-control" name="date" id="StarT"/>
-                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
-		<br style="clear:both" />
-		<p id="st1">End Date:</p>
-        <div id="start1" class="col-xs-5 date">
-            <div class="input-group input-append date" id="datePicker2">
-                <input type="text" class="form-control" name="date" id="end"/>
-                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
-		</div>
-		<form>
-		<p>Select graph style:</p>
-			<label class="radio-inline">
-				<input type="radio" name="optradio" value="bar" checked>Bar
-			</label>
-			<label class="radio-inline">
-				<input type="radio" name="optradio" value="line">Line
-			</label>
-		</form>
-		
-	</form>
-	<div id="feedback" class="ui message" visibility="hidden">
-  <i class="close icon"></i>
-  <div class="header">
-    The query to API didn't give any results!
-  </div>
-  
-</div>
-	</div >
-	<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>
-</div>
-<!--var end -->
+		<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.css' rel='stylesheet' />
+		<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.3/leaflet.draw.js'></script>
 
-
-
-<div id = "mapgraph" tabindex="-1">
-	<div id="mapdiv" >
-		<div id="map">
-		<button class= "ui blue button" id="markerButton" type="button" >Mark a point</button>
-		</div>
-	</div>
-	<div id="coorddiv">
-  		<p>Coordinates are (lat,lng):<span id="coordinates"></span> </p>
-	</div>
-	<!--graph-->
-	<div id="graph"></div>
-	<div id="myModal" class="modal">
+		<link href='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.css' rel='stylesheet' />
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.4/semantic.min.js'></script>
 		
-		<div class="modal-content"> 
-			<div id="modalgraph">
-			<div id="modalbuttons">
-				<button class= "ui small blue button" id="remove" type="button" >Remove</button>
-				<button class= "ui small blue button" id="combine" type="button" >Combine</button>
-				<button class= "ui small blue button" id="getLink1" type="button" >Get link</button>
-				<input type="text" id="linkAddress1"  visibility="hidden">
-				<span class="close">X</span>
+		<link href="stylesheets/style.css" rel="stylesheet" />
+		<link href="stylesheets/modalCSS.css" rel="stylesheet" />
+		
+		<script src="javascripts/UI.js"></script>
+		<script src="javascripts/VarGraph.js"></script>
+		<script src="javascripts/PermalinkCharts.js"></script>
+		
+		
+		<!-- Include Bootstrap Datepicker -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
+	</head>
+	<body>
+	
+		<script>		
+			var permalink= "<%= theMonsterInput %>";
+			if (permalink != 666){
+				generateGraphPermaVersion(permalink);
+				}		
+		</script>
+		
+		<div id="vars">
+			<div id="div2" >	
+				<select  id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
+					<option value="default" class="default">Select dataset</option>
+					<option value="noaa_gfs_global_sflux_0.12d">GFS global weather forecast by NCEP. Near surface parameters.</option>
+					<option value="noaa_icoads_enhanced_1d_day">International Comprehensive Ocean-Atmosphere Data Set, Monthly Summary Statistics, 1&deg</option>
+					<option value="noaa-ncep_gefs">Global Ensemble Forecast System (GEFS)</option>
+					<option value="metno_harmonie_metcoop">MET Norway HARMONIE Forecast</option>
+					<option value="noaa_nam_awips_12">North American Mesoscale Forecast System (NAM): CONUS Full Complement Of Surface-Based Fields - 12 Km</option>
+					<option value="noaa_nam_alaska">North American Mesoscale Forecast System (NAM): Alaska Nest - 6 Km</option>
+					<option value="noaa_aqfs_avg_1h_o3_conus">National Air Quality Forecast System (AQFS): 1-Hour Average Ozone CONUS</option>
+					<option value="noaa_aqfs_pm25_bc_conus">National Air Quality Forecast System (AQFS): Bias Corrected PM2.5 CONUS</option>
+					<option value="noaa_ww3_global_1.25x1d">NOAA Wave Watch III (NWW3) Ocean Wave Model</option>
+					<option value="hycom_glbu0.08_91.2_global_0.08d">HYCOM (Hybrid Coordinate Ocean Model) Global Ocean Forecast</option>
+					<option value="noaa_rtofs_surface_1h_diag">Global Real-Time Ocean Forecast System (RTOFS) - 2D Surface 1 Hourly Diagnostic Forecast</option>
+				</select>
+				
+				<select disabled="false" id="varid" class="ui fluid search dropdown" >
+					<option value="default" class="default">Select variable</option>
+				</select>
+				<div id="cont" >
+				</div>
 			</div>
-				<canvas id="modalcontent"></canvas>
-			</div>
-			
-			<div id="everythingElse" >
-				<p id="t1"><p>
-				<p id="a1"></p>
-				<div id="labels"></div>
-				</br>
-				<p id="d1"></p>
-			
-			</div>
+			<div id="div1">
+				<form id="eventForm" method="post" class="form-horizontal">
+				<div class="form-group">
+				<p id="st">Start Date:</p>
+				<div id="start" class="col-xs-5 date">
+					<div class="input-group input-append date" id="datePicker1" >
+						<input type="text" class="form-control" name="date" id="StarT"/>
+						<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+					</div>
+				</div>
+				<br style="clear:both" />
+				<p id="st1">End Date:</p>
+				<div id="start1" class="col-xs-5 date">
+					<div class="input-group input-append date" id="datePicker2">
+						<input type="text" class="form-control" name="date" id="end"/>
+						<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+					</div>
+				</div>
+				</div>
+				<form>
+				<p>Select graph style:</p>
+					<label class="radio-inline">
+						<input type="radio" name="optradio" value="bar" checked>Bar
+					</label>
+					<label class="radio-inline">
+						<input type="radio" name="optradio" value="line">Line
+					</label>
+				</form>
+				
+			</form>
+			<div id="feedback" class="ui message" visibility="hidden">
+		  <i class="close icon"></i>
+		  <div class="header">
+			The query to API didn't give any results!
+		  </div>
+		  
 		</div>
-	</div>
-	<div id="myModal2" class="modal">
-		<div class="modal-content">
-			<h1 style="margin-left:150px">Choose a graph to combine with by clicking on it<span class="close">X</span></h1>
-			<div id="combgraph">
-			</div>
+			</div >
+			<button class="huge ui blue button" id="generateGraph" type="button" onclick="generateGraph()">Generate graph</button>
 		</div>
-	</div>
-	<!--graph end -->
+		<!--var end -->
 
-</div>
+		<div id = "mapgraph" tabindex="-1">
+			<div id="mapdiv" >
+				<div id="map">
+				<button class= "ui blue button" id="markerButton" type="button" >Mark a point</button>
+				</div>
+			</div>
+			<div id="coorddiv">
+				<p>Coordinates are (lat,lng):<span id="coordinates"></span> </p>
+			</div>
+			<!--graph-->
+			<div id="graph"></div>
+			<div id="myModal" class="modal">
+				
+				<div class="modal-content"> 
+					<div id="modalgraph">
+					<div id="modalbuttons">
+						<button class= "ui small blue button" id="remove" type="button" >Remove</button>
+						<button class= "ui small blue button" id="combine" type="button" >Combine</button>
+						<button class= "ui small blue button" id="getLink1" type="button" >Get link</button>
+						<input type="hidden" id="linkAddress1">
+						<span class="close">X</span>
+					</div>
+						<canvas id="modalcontent"></canvas>
+					</div>
+					
+					<div id="everythingElse" >
+						<p id="t1"><p>
+						<p id="a1"></p>
+						<div id="labels"></div>
+						</br>
+						<p id="d1"></p>
+					
+					</div>
+				</div>
+			</div>
+			<div id="myModal2" class="modal">
+				<div class="modal-content">
+					<h1 style="margin-left:150px">Choose a graph to combine with by clicking on it<span class="close">X</span></h1>
+					<div id="combgraph"></div>
+				</div>
+			</div>
+			<!--graph end -->
 
-	
-
-<script src="javascripts/VarGraph.js"></script>
-<script src="javascripts/displayMap.js"></script>
-
-
-
+		</div>
+		<script src="javascripts/displayMap.js"></script>
 </body>
 </html>

@@ -194,7 +194,7 @@ function generateGraph(){
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
 						"&start="+input.start+"&end="+input.end+"&count=20";
-	console.log(currenturl);
+	console.log(input);
 	$.getJSON(currenturl,function(data){
 		var values=[];
 		var time=[];
@@ -274,11 +274,13 @@ function getValues(){
 	return {
 		id : id,
 		variable : variable,
+		prettyVariable : $("#varid option[value='"+variable+"'] ").text(),
 		lat : lat,
 		lng : lng,
 		start : isoStart,
 		end : isoEnd,
 		style : graphType,
+		unit : units[(document.getElementById("varid").selectedIndex-1)],
 		multigraph : false
 	};	
 }
@@ -293,21 +295,7 @@ function randomColor(){
 var graphList= {};
 var dataList=[];
 //var lastGraph;
-var labelAndUnit=""
-function dummy(lu){
-	labelAndUnit=lu;
-}
-function makeRequest(id,variable){ 
-	$.getJSON(url+"/"+id+key, function(data){
-		for (var i = 0;i <data.Variables.length ; i++){
-			if (data.Variables[i].isData && data.Variables[i].name==variable) {
-				labelAndUnit+=data.Variables[i].longName+";"+data.Variables[i].unit;
-				break;
-			}}
-			dummy(labelAndUnit);
-			}
-		);
-} 
+
 
 function createGraph(id,values,time,input){
 	var index = document.getElementById("varid").selectedIndex;
@@ -315,12 +303,10 @@ function createGraph(id,values,time,input){
 	if (lableName==""){
 		lableName= input.variable
 	}
-	var unit = units[(index-1)]; // check if UNDEFINED
+	var unit = units[(index-1)]; 
 	if (unit == undefined){
-		var APIkutse= makeRequest(input.id, input.variable);
-		APIkutse=labelAndUnit.split(";");
-		unit= APIkutse[1]
-		lableName= APIkutse[0]
+		unit=input.unit;
+		lableName= input.prettyVariable;
 	}
 	var graphType = input.style;
 	var color=randomColor();
@@ -374,7 +360,18 @@ function createGraph(id,values,time,input){
 	//lastGraph=myChart;
 }
 
+function findingIndex(confPart){
+	for (i in graphList){
+		if (graphList[i].config==confPart){
+			return i;
+		}	}
+	return -1;
+}
+
 function multigraphs(c1,c2){
+	var inputID1=findingIndex(c1);
+	var inputID2=findingIndex(c2)
+
 	console.log(c1);
 	var id1=c1.datasetName;
 	var id2=c2.datasetName;
@@ -567,15 +564,20 @@ function multigraphs(c1,c2){
 		}
 	}
 	console.log("add newgraph to graphlist");
+	var DATA1= dataList[inputID1]; // So I need the subgraphs in those lists as well
+	var DATA2= dataList[inputID2];
+
 	graphList[id]=chart;
 	dataList[id]={
 		id : id1+","+id2,
-		variable : "",
-		lat : "",
-		lng : "",
-		start : "",
-		end : "",
-		style : "",
+		variable : DATA1.variable+","+DATA2.variable,
+		prettyVariable: DATA1.prettyVariable+","+DATA2.prettyVariable,
+		lat : DATA1.lat+",,"+DATA2.lat,
+		lng : DATA1.lng+",,"+DATA2.lng,
+		start : DATA1.start+","+DATA2.start,
+		end : DATA1.end+","+DATA2.end,
+		style : DATA1.style+","+DATA2.style,
+		unit : DATA1.unit+","+DATA2.unit,
 		multigraph : true
 		
 	};
@@ -583,7 +585,6 @@ function multigraphs(c1,c2){
 	return false;
 }
 function getLink(chartid){
-	console.log("muudan input kasti avatuks");
 	$('#linkAddress1').clone().attr('type','text').insertAfter('#linkAddress1').prev().remove();
 	//$("#linkAddress1").css('type', 'text');
 	var partData1=JSON.stringify(dataList[chartid]); 

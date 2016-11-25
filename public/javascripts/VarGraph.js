@@ -40,8 +40,7 @@ function createCanvas(){
 	var divid = "canvasdiv" +nextcanvasnr;
 	
 	$("<div>").attr({id:divid}).appendTo("#graph");
-	$("<canvas>").attr({id:canvasid}).click(modalFunc).appendTo("#"+divid);
-	
+	$("<canvas>").attr({id:canvasid}).click(modalFunc).appendTo("#"+divid); // Maybe I need to alter this a bit too
 	nextcanvasnr++;
 	return canvasid;
 }
@@ -292,7 +291,7 @@ var moregraphs=false;
 function randomColor(){
 	return "rgba("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+0.5+")";
 }
-var graphList= {};
+var graphList= [];
 var dataList=[];
 //var lastGraph;
 
@@ -372,7 +371,7 @@ function multigraphs(c1,c2){
 	var inputID1=findingIndex(c1);
 	var inputID2=findingIndex(c2)
 
-	console.log(c1);
+	console.log("jõudsin multigraafi tegemise juure....");
 	var id1=c1.datasetName;
 	var id2=c2.datasetName;
 	console.log("datasets:"+id1+" "+id2);
@@ -581,6 +580,9 @@ function multigraphs(c1,c2){
 		multigraph : true
 		
 	};
+	//console.log("after creating the multigraph");
+	//console.log(graphsList);
+	//console.log(dataList);
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	return false;
 }

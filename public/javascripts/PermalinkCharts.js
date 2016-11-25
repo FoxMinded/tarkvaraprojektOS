@@ -1,9 +1,6 @@
 function baseConfig(i,values,time,input){
-	console.log("I am in basegraph now. Input object:");
 	var style= input.style;
 	var color=randomColor();
-	//var ctx = $("#"+id);
-	
 	var myChart =  {
 	type: input.style,
 	datasetName : input.id,
@@ -50,27 +47,23 @@ function baseConfig(i,values,time,input){
 	};
 	graphList["chart"+i]=(myChart);
 	
-	if (countGraphObj(graphList)== dataList.length){
+	if (countGraphObj(graphList)== countGraphObj(dataList)){
 		var graphListTwin=[]
 		for (obj in graphList){
 			graphListTwin.push(graphList[obj]);
 		}
-	//console.log("graphList jõudis dataListile järele");
 	graphListTwin.reduce(makeOneMultigraph);
 	}
 	
 }
-function countGraphObj(){
+function countGraphObj(arr){
 	length=0;
-	for (obj in graphList){
+	for (obj in arr){
 		length+=1;
 	}
 	return length;
 }
 function returnMeGraph(input,num){
-	//console.log("in returnGraph and got:");
-	//console.log(input[0].id);
-	input=input[0];
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
 						"&start="+input.start+"&end="+input.end+"&count=20";
@@ -93,13 +86,6 @@ function returnMeGraph(input,num){
 				checkingValuesFromAPI1();
 				return;
 			}
-		// I AM GOING TO TRY TO JUST CREATE CONFIG OBJECTS (not chart objects)
-		//var canvasid = createCanvas("#dummyDiv", false);
-		//<---ma ei tea veel kas mul seda üldse vaja on...
-		//var divid = "canvasdiv" +num;
-		//$("<div>").attr({id:divid}).appendTo("#dummyDiv");
-		//$("<canvas>").attr({id:canvasid}).click(modalFunc).appendTo("#"+divid); // If it is not visible, there is no use of click method
-		// shady stuff ends here--->
 		var modtime = modTime(time);
 		baseConfig(num,values,modtime,input);});
 }
@@ -108,16 +94,10 @@ function makeOneMultigraph(one, end){
 }
 
 function doGraphs(arr){
-	//console.log("I am in doGraphs now");
 	for (i in arr){
-		 // OKEI, SEE ON OBJEKT
-		// here I will create the graph and add it to graphList
-		returnMeGraph(arr[i], i);/* Will make API request and send to baseGraph 
-									where it will be made as chart.config object and put to 
-									graphList*/
-		//console.log(obj);
+		returnMeGraph(arr[i], i);
 	}
-	// NOW I CAN MAYBE USE REDUCE TO GET 1 combined multigraph
+	
 	
 		
 }
@@ -135,16 +115,11 @@ function getBits(input){
     var graafikud = ids.map(function (e, i) {
 		// so this should be like input objects
 		inputObject={id:ids[i], variable:variables[i],prettyVariable: prettyVariable[i], lat:lats[i],lng: lngs[i], start:starts[i], end:ends[i], style:style[i], unit:unit[i], multigraph:false}
-        dataList[i]=inputObject; // now i need to generate the graphs and put them to graphList-> Context: dummyDiv
-		return [inputObject];
+        dataList["chart"+nextcanvasnr]=inputObject; // now i need to generate the graphs and put them to graphList-> Context: dummyDiv
+		nextcanvasnr++;
+		return inputObject;
     });
 	doGraphs(graafikud);
-	// NOW I NEED TO GENERATE THE CHART OBJECTS. THIS IS GOING TO BE INTERESTING.
-	// They are all going to the graphList and dataList arrays because that's how it is in the multigraph function
-
-    // Siis on mul käes üksikud graafikud. 
-    // kõigepealt teeksin chart objektid neist kõigist, siis chart.configi söödaksin sisse assotsiatsiivselt
-    // reduce meetodiga ning siis saaksin tulemuseks ühe graafiku
 	return graafikud;
 }
 // okay, so do I need to duplicate other methods as well or I can just use them?
@@ -152,10 +127,7 @@ function generateGraphPermaVersion(input){
 	input=decode(input);
 	input=JSON.parse(input);
 	if (input.multigraph){
-		// do sth different
-		console.log("found a multigraph");
-		var arrOfBasegraphs= getBits(input)
-		console.log(arrOfBasegraphs);
+		getBits(input)
 		return;
 	}
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+

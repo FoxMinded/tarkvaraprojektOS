@@ -56,7 +56,7 @@ function modalFunc(event){
 		console.log("olemasolevad graafid: ", graphList);
 		return false;
 	}
-	//getting dataset value
+	
 	if(dataList[targetid].multigraph==false){
 	$("#d1").html('<b>Dataset</b>:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
 	$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
@@ -193,7 +193,7 @@ function generateGraph(){
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
 						"&start="+input.start+"&end="+input.end+"&count=20";
-	console.log(input);
+	//console.log(input);
 	$.getJSON(currenturl,function(data){
 		var values=[];
 		var time=[];
@@ -222,7 +222,7 @@ function generateGraph(){
 		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).position().top}, "slow");
 		
 		$("#mapgraph").focus();
-		console.log(graphList);
+	//	console.log(graphList);
 		
 	});
 }
@@ -361,7 +361,7 @@ function createGraph(id,values,time,input){
 
 function findingIndex(confPart){
 	for (i in graphList){
-		if (graphList[i].config==confPart){
+		if (graphList[i].config==confPart|| graphList[i]==confPart){// I need to fix this here
 			return i;
 		}	}
 	return -1;
@@ -370,11 +370,8 @@ function findingIndex(confPart){
 function multigraphs(c1,c2){
 	var inputID1=findingIndex(c1);
 	var inputID2=findingIndex(c2)
-
-	console.log("jõudsin multigraafi tegemise juure....");
 	var id1=c1.datasetName;
 	var id2=c2.datasetName;
-	console.log("datasets:"+id1+" "+id2);
 	var id = createCanvas();
 	var ctx = $("#"+id);
 	var time1 = c1.data.labels;
@@ -388,7 +385,7 @@ function multigraphs(c1,c2){
 		}
 		
 	}
-	console.log("c1",clone);
+	//console.log("c1",clone);
 	var label1 = c1.data.datasets[0].label;
 	var type1 =c1.data.datasets[0].type;
 	var fromzero=false;
@@ -497,7 +494,7 @@ function multigraphs(c1,c2){
 				clone.splice(j,0,NaN);
 			}
 		}
-		console.log("data2 ",clone);
+		//console.log("data2 ",clone);
 		var dataset = {
 				fill:false,
 				label:label2,
@@ -562,10 +559,8 @@ function multigraphs(c1,c2){
 			}
 		}
 	}
-	console.log("add newgraph to graphlist");
-	var DATA1= dataList[inputID1]; // So I need the subgraphs in those lists as well
+	var DATA1= dataList[inputID1]; // Why undefined?
 	var DATA2= dataList[inputID2];
-
 	graphList[id]=chart;
 	dataList[id]={
 		id : id1+","+id2,
@@ -580,9 +575,6 @@ function multigraphs(c1,c2){
 		multigraph : true
 		
 	};
-	//console.log("after creating the multigraph");
-	//console.log(graphsList);
-	//console.log(dataList);
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	return false;
 }

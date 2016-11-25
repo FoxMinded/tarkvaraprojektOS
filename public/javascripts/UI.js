@@ -37,11 +37,11 @@ $(document).ready(function() {
 					}
 					$("#datePicker1").datepicker("setEndDate",enddate);
 				});
-		/*
+		
 			$('.s2').dropdown();
 		
 			$('#datasets').dropdown({
 				allowReselection:false,
 				onChange:getVariables,
-			}); */
+			}); 
 	});

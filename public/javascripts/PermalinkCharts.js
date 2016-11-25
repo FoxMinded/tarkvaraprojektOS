@@ -75,7 +75,8 @@ function returnMeGraph(input,num){
 			checkingValuesFromAPI1();
 			return; //nothing to generate a graph of
 		}
-		for(var i=0;i<data.entries.length;i++){ 
+		var len = data.entries.length>20 ? 20 : data.entries.length;
+		for(var i=0;i<len;i++){ 
 			//not taking the values with null values
 			if (data.entries[i].data[input.variable]!= null){
 				values.push(data.entries[i].data[input.variable]);
@@ -130,6 +131,7 @@ function generateGraphPermaVersion(input){
 		getBits(input)
 		return;
 	}
+	
 	var currenturl = url+"/"+input.id+"/point"+key+"&var="+input.variable+"&lat="+
 						input.lat+"&lon="+input.lng+
 						"&start="+input.start+"&end="+input.end+"&count=20";	
@@ -141,7 +143,8 @@ function generateGraphPermaVersion(input){
 			checkingValuesFromAPI1();
 			return; //nothing to generate a graph of
 		}
-		for(var i=0;i<data.entries.length;i++){
+		var len = data.entries.length>20 ? 20 : data.entries.length;
+		for(var i=0;i<len;i++){
 			//not taking the values with null values
 			if (data.entries[i].data[input.variable]!= null){
 				values.push(data.entries[i].data[input.variable]);

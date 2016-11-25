@@ -6,15 +6,18 @@ function populate(stndname,varname,htmlid){
 	var options="";
 	for(var i = 0; i < stndname.length; i++)
 		options += '<option value='+varname[i]+'>'+(stndname[i]==null ? varname[i]:stndname[i])+'</option>';
-	var def = "<option value="+'default'+" class="+'default'+">"+'Select variable'+"</option>";
+	var def = "<option value=''>Select variable</option>";
 	$("#"+htmlid).html(def+options);
 }
 
 //gets variable names that correspond to the  dataset name
 var units=[];
-function getVariables(){
+var geolayer = L.geoJson();
+function getVariables(value,text){
+	geolayer.clearLayers();
+	$(".s2").dropdown("clear");
 	$("#datasets").css("border", "");
-	var id=$("#datasets").val();
+	var id=value
 	if (id=="") return false;
 	console.log(id); 
 	var stndname =[];
@@ -22,6 +25,11 @@ function getVariables(){
 	units=[];
 	console.log(url+"/"+id+key);
 	$.getJSON(url+"/"+id+key, function(data){
+		var geojson= {
+			"type": data.SpatialExtent.type,
+			"coordinates": data.SpatialExtent.coordinates
+		};
+		geolayer.addData(geojson);
 		for (var i = 0;i <data.Variables.length ; i++){
 			if (data.Variables[i].isData) {
 				stndname.push(data.Variables[i].longName);
@@ -31,7 +39,9 @@ function getVariables(){
 		}
 		populate(stndname,varname,"varid");	
 	});
+	map.addLayer(geolayer);
 	$("#varid").attr("disabled",false);
+	$(".s2").removeClass("disabled");
 }
 //creates a reference for each chart object
 var nextcanvasnr =0;
@@ -58,22 +68,24 @@ function modalFunc(event){
 	}
 	
 	if(dataList[targetid].multigraph==false){
-	$("#d1").html('<b>Dataset</b>:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
-	$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
-	//when in modal view make a new query to api about the general info on dataset
-	var datasetUrl = url+"/"+dataList[targetid].id+""+key;
+		$("#d1").html('<b>Dataset</b>:<a href="http://data.planetos.com/datasets/'+dataList[targetid].id+'">'+dataList[targetid].id+"</a>")
+		$("#a1").html('<a class="ui grey tag label">'+"Area:"+"("+dataList[targetid].lng+";"+dataList[targetid].lat+")</a>");
+		//when in modal view make a new query to api about the general info on dataset
+		var datasetUrl = url+"/"+dataList[targetid].id+""+key;
 	
-	$.getJSON(datasetUrl,function(data){
-		var title= data.Title;
-		var source= data.Source;
-		var category= data.Categories; 
-		var allLabels='<a class="ui purple tag label">'+source+'</a>'
-		for (i in category){
-			allLabels+='<a class="ui teal tag label">'+category[i]+'</a>';
-		}
-		$("#labels").html(allLabels);
+		$.getJSON(datasetUrl,function(data){
+			var title= data.Title;
+			var source= data.Source;
+			var category= data.Categories; 
+			var allLabels='<a class="ui purple tag label">'+source+'</a>'
+			for (i in category){
+				allLabels+='<a class="ui teal tag label">'+category[i]+'</a>';
+			}
+			$("#labels").html(allLabels);
 
-	});}else{
+		});
+	}
+	else{
 	//1.datasetid eraldada ja linkidena manada
 		let datasets=dataList[targetid].id;
 		datasets= datasets.split(",");
@@ -202,7 +214,8 @@ function generateGraph(){
 			checkingValuesFromAPI1();
 			return; //nothing to generate a graph of
 		}
-		for(var i=0;i<data.entries.length;i++){ 
+		var len = data.entries.length>20 ? 20 : data.entries.length;
+		for(var i=0;i<len;i++){ 
 			//not taking the values with null values
 			if (data.entries[i].data[input.variable]!= null){
 				values.push(data.entries[i].data[input.variable]);
@@ -259,17 +272,16 @@ function getValues(){
 		$("#mapdiv").css("border", "solid red");
 		return false;
 	}
-	var id = $("#datasets").val();
-	if (id=="default"){
+	var id =$('#datasets').dropdown('get value');
+	if (id==""){
 		$("#datasets").css("border", "solid red");
 		return false;
 	}
-	var variable = $("#varid").val();
-	if (variable=="default"){
-		$("#varid").css("border", "solid red");
+	var variable = $(".s2").dropdown("get value");
+	if (variable==""){
+		$(".s2").css("border", "solid red");
 		return false;
 	}
-
 	return {
 		id : id,
 		variable : variable,
@@ -284,7 +296,7 @@ function getValues(){
 	};	
 }
 $("#varid").on('change', function() {
-	$("#varid").css("border", "");
+	$(".s2").css("border", "");
 });
 var moregraphs=false;
 

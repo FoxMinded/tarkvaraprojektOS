@@ -19,10 +19,6 @@
 		<link href="stylesheets/style.css" rel="stylesheet" />
 		<link href="stylesheets/modalCSS.css" rel="stylesheet" />
 		
-		<script src="javascripts/UI.js"></script>
-		<script src="javascripts/VarGraph.js"></script>
-		<script src="javascripts/PermalinkCharts.js"></script>
-		
 		
 		<!-- Include Bootstrap Datepicker -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker3.min.css" />
@@ -39,23 +35,26 @@
 		
 		<div id="vars">
 			<div id="div2" >	
-				<select  id="datasets" class="ui fluid search dropdown" onchange="getVariables()">
-					<option value="default" class="default">Select dataset</option>
-					<option value="noaa_gfs_global_sflux_0.12d">GFS global weather forecast by NCEP. Near surface parameters.</option>
-					<option value="noaa_icoads_enhanced_1d_day">International Comprehensive Ocean-Atmosphere Data Set, Monthly Summary Statistics, 1&deg</option>
-					<option value="noaa-ncep_gefs">Global Ensemble Forecast System (GEFS)</option>
-					<option value="metno_harmonie_metcoop">MET Norway HARMONIE Forecast</option>
-					<option value="noaa_nam_awips_12">North American Mesoscale Forecast System (NAM): CONUS Full Complement Of Surface-Based Fields - 12 Km</option>
-					<option value="noaa_nam_alaska">North American Mesoscale Forecast System (NAM): Alaska Nest - 6 Km</option>
-					<option value="noaa_aqfs_avg_1h_o3_conus">National Air Quality Forecast System (AQFS): 1-Hour Average Ozone CONUS</option>
-					<option value="noaa_aqfs_pm25_bc_conus">National Air Quality Forecast System (AQFS): Bias Corrected PM2.5 CONUS</option>
-					<option value="noaa_ww3_global_1.25x1d">NOAA Wave Watch III (NWW3) Ocean Wave Model</option>
-					<option value="hycom_glbu0.08_91.2_global_0.08d">HYCOM (Hybrid Coordinate Ocean Model) Global Ocean Forecast</option>
-					<option value="noaa_rtofs_surface_1h_diag">Global Real-Time Ocean Forecast System (RTOFS) - 2D Surface 1 Hourly Diagnostic Forecast</option>
-				</select>
+				<div id="datasets" class="ui fluid selection dropdown">
+					<i class="dropdown icon"></i>
+					<div class="default text">Select dataset</div>
+					<div class="menu">
+						<div class="item" data-value="noaa_gfs_global_sflux_0.12d">GFS global weather forecast by NCEP. Near surface parameters.</div>
+						<div class="item" data-value="noaa_icoads_enhanced_1d_day">International Comprehensive Ocean-Atmosphere Data Set, Monthly Summary Statistics, 1&deg </div>
+						<div class="item" data-value="noaa-ncep_gefs">Global Ensemble Forecast System (GEFS)</div>
+						<div class="item" data-value="metno_harmonie_metcoop">MET Norway HARMONIE Forecast </div>
+						<div class="item" data-value="noaa_nam_awips_12">North American Mesoscale Forecast System (NAM): CONUS Full Complement Of Surface-Based Fields - 12 Km</div>
+						<div class="item" data-value="noaa_nam_alaska">North American Mesoscale Forecast System (NAM): Alaska Nest - 6 Km</div>
+						<div class="item" data-value="noaa_aqfs_avg_1h_o3_conus">National Air Quality Forecast System (AQFS): 1-Hour Average Ozone CONUS</div>
+						<div class="item" data-value="noaa_aqfs_pm25_bc_conus">National Air Quality Forecast System (AQFS): Bias Corrected PM2.5 CONUS</div>
+						<div class="item" data-value="noaa_ww3_global_1.25x1d">NOAA Wave Watch III (NWW3) Ocean Wave Model</div>
+						<div class="item" data-value="hycom_glbu0.08_91.2_global_0.08d">HYCOM (Hybrid Coordinate Ocean Model) Global Ocean Forecast</div>
+						<div class="item" data-value="noaa_rtofs_surface_1h_diag">Global Real-Time Ocean Forecast System (RTOFS) - 2D Surface 1 Hourly Diagnostic Forecast</div>
+					</div>
+				</div>
 				
-				<select disabled="false" id="varid" class="ui fluid search dropdown" >
-					<option value="default" class="default">Select variable</option>
+				<select id="varid" class="ui fluid search selection dropdown disabled s2" >
+					<option value="">Select variable</option>
 				</select>
 				<div id="cont" >
 				</div>
@@ -147,5 +146,8 @@
 
 		</div>
 		<script src="javascripts/displayMap.js"></script>
+		<script src="javascripts/UI.js"></script>
+		<script src="javascripts/VarGraph.js"></script>
+		<script src="javascripts/PermalinkCharts.js"></script>
 </body>
 </html>

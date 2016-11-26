@@ -38,7 +38,11 @@ $(document).ready(function() {
 					$("#datePicker1").datepicker("setEndDate",enddate);
 				});
 		
-			$('.s2').dropdown();
+			$('.s2').dropdown({
+				onChange:function(){
+					$(".s2").css("border","");
+				}
+			});
 		
 			$('#datasets').dropdown({
 				allowReselection:false,

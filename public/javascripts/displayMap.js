@@ -89,9 +89,10 @@ map.on('draw:created', function(e) {
 	if(e.layerType=="marker"){
 		e.layer.options.draggable=true;
 		//console.log(e.layer.getLatLng());
-		latlngobj.lat=Math.round(e.layer.getLatLng().lat*1000)/1000;
-		latlngobj.lng=Math.round(e.layer.getLatLng().lng*1000)/1000;
-		displayCoord([e.layer.getLatLng()]);		
+		var ll = L.latLng(e.layer.getLatLng().wrap());
+		latlngobj.lat=Math.round(ll.lat*1000)/1000;
+		latlngobj.lng=Math.round(ll.lng*1000)/1000;
+		displayCoord();	
 		e.layer.on("drag",function(e){
 			//console.log("dragging");
 			latlngobj.lat=Math.round(e.target.getLatLng().lat*1000)/1000;
@@ -134,7 +135,7 @@ map.on("draw:deleted", function(e) {
 	
 });
 
-function displayCoord(coord){
+function displayCoord(){
 	var text="";
 	/*
 	for (var val of coord){

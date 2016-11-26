@@ -95,9 +95,10 @@ map.on('draw:created', function(e) {
 		displayCoord();	
 		e.layer.on("drag",function(e){
 			//console.log("dragging");
-			latlngobj.lat=Math.round(e.target.getLatLng().lat*1000)/1000;
-			latlngobj.lng=Math.round(e.target.getLatLng().lng*1000)/1000;
-			displayCoord([e.target.getLatLng()]);
+			var ll = L.latLng(e.target.getLatLng().wrap());
+			latlngobj.lat=Math.round(ll.lat*1000)/1000;
+			latlngobj.lng=Math.round(ll.lng*1000)/1000;
+			displayCoord();
 					
 		});
 		featureGroup.addLayer(e.layer);

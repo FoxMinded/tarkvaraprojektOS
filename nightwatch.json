@@ -14,7 +14,10 @@
     "start_process" : true,
     "server_path" : "./bin/selenium2.41.0.jar",
     "log_path" : "",
-    "port" : 4445
+    "port" : 4445,
+    "cli_args" : {
+      "webdriver.chrome.driver" : "./bin/chromedriver.exe"
+    }
   },
 
   "test_settings" : {
@@ -28,10 +31,13 @@
         "enabled" : false,
         "path" : ""
       },
-      "desiredCapabilities": {
-        "browserName": "firefox",
-        "javascriptEnabled": true,
-        "acceptSslCerts": true
+     "desiredCapabilities" : {
+        "browserName" : "chrome",
+        "javascriptEnabled" : true,
+        "acceptSslCerts" : true,
+		"chromeOptions" : {
+			"args" : ["--test-type","--disable-extensions"]
+		}
       },
 	  "exclude" : "./node_modules/nightwatch/examples/unittests/*"
     },

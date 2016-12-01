@@ -12,7 +12,7 @@
 
   "selenium" : {
     "start_process" : true,
-    "server_path" : "./bin/selenium.jar",
+    "server_path" : "./bin/selenium2.41.0.jar",
     "log_path" : "",
     "port" : 4445,
     "cli_args" : {

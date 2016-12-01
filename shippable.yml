@@ -8,13 +8,7 @@ node_js:
 
 services:
   - selenium
-build:
-  pre_ci_boot:
-    image_name: drydock/u14nodpls
-    image_tag: prod
-    pull: true
-
-  ci:
-    - sudo npm install
-    - export DISPLAY=:99.0
-    - xvfb-run --server-args="-ac" npm test
+script:
+  - sudo npm install
+  - export DISPLAY=:99.0
+  - xvfb-run --server-args="-ac" npm test

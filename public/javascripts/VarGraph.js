@@ -378,7 +378,11 @@ function findingIndex(confPart){
 		}	}
 	return -1;
 }
+function replaceBackslash(str){
+	for(i in str){
 
+	}
+}
 function multigraphs(c1,c2){
 	var inputID1=findingIndex(c1);
 	var inputID2=findingIndex(c2)
@@ -590,9 +594,21 @@ function multigraphs(c1,c2){
 	$("#mapgraph").animate({ scrollTop: $("#"+id).position().top}, "slow");
 	return false;
 }
+function replaceChar(str, sign, wwhat){
+  var newStr= ""
+  for (i in str){
+    if (str[i]==sign){
+      newStr+=wwhat
+    }else{
+      newStr+= str[i]
+    }
+  }
+  return newStr;
+}
 function getLink(chartid){
 	$('#linkAddress1').clone().attr('type','text').insertAfter('#linkAddress1').prev().remove();
 	//$("#linkAddress1").css('type', 'text');
 	var partData1=JSON.stringify(dataList[chartid]); 
+	var partData1=replaceChar(partData1,"/", "!");
 	$("#linkAddress1").val("http://tarkvaraprojektos.herokuapp.com/"+partData1);
 }

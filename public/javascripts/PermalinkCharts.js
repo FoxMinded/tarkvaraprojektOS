@@ -126,6 +126,7 @@ function getBits(input){
 // okay, so do I need to duplicate other methods as well or I can just use them?
 function generateGraphPermaVersion(input){
 	input=decode(input);
+	input=replaceChar(input,"!","/")
 	input=JSON.parse(input);
 	if (input.multigraph){
 		getBits(input)

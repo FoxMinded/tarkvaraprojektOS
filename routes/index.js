@@ -7,13 +7,18 @@ router.get('/', function(req, res, next) {
   res.render('request.ejs', { theMonsterInput: "666" });
 }); 
 router.get('/:sth', function(req, res, next) {
-    var sth=JSON.parse(req.params.sth);
 
-     res.render('request.ejs', { theMonsterInput: JSON.stringify(sth) });
-     
-  //res.send('about time...'+sth);
+    var sth=JSON.parse(req.params.sth);
+    res.render('request.ejs', { theMonsterInput: JSON.stringify(sth) });
+  
+  
   //res.render('request.html',{GraphObject: sth});
 });
+router.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
+
 //assuming app is express Object.
 /*
 router.get('/',function(req,res){

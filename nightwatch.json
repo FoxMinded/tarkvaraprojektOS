@@ -16,7 +16,7 @@
     "log_path" : "",
     "port" : 4445,
     "cli_args" : {
-      "webdriver.chrome.driver" : "/root/src/github.com/FoxMinded/tarkvaraprojektOS/bin/chromedriver"
+      "webdriver.chrome.driver" : "/root/src/github.com/FoxMinded/tarkvaraprojektOS/bin/chromedriver.exe"
     }
   },
 

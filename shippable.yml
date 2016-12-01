@@ -9,6 +9,5 @@ node_js:
 services:
   - selenium
 script:
-  - sudo npm install
   - export DISPLAY=:99.0
   - xvfb-run --server-args="-ac" npm test

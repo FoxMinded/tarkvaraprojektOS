@@ -154,7 +154,7 @@ function modalFunc(event){
 				//want to change the p elements value
 				$("#feedback").html("Nothing to combine the graph with!");
 				$("#feedback").css('visibility', 'visible');
-				setTimeout(fadeMessage,7000)
+				setTimeout(fadeMessage,7000);
 				return;
 			}
 			combine(targetid,newgraph);

@@ -31,9 +31,14 @@
 
 		<script>
 			var permalink= "<%= theMonsterInput %>";
-			if (permalink != 666){
-				generateGraphPermaVersion(permalink);
+			if (permalink == "999"){
+				$( document ).ready(function() {
+					notValid();
+				});}
+			else if (permalink!=666 ){
+					generateGraphPermaVersion(permalink);
 				}
+				
 		</script>
 
 		<div id="vars">

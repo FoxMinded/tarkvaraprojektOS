@@ -123,11 +123,29 @@ function getBits(input){
 	doGraphs(graafikud);
 	return graafikud;
 }
+function notValid(){
+	$("#feedback").html("Invalid link!");
+	$("#feedback").css('visibility', 'visible');
+	setTimeout(fadeMessage,7000);	
+}
 // okay, so do I need to duplicate other methods as well or I can just use them?
 function generateGraphPermaVersion(input){
 	input=decode(input);
 	input=replaceChar(input,"!","/")
+	/*
+	*  Kui pole õige, siis ei hakka midagi genereerima, vaid anname feedback-i kasutajale
+	*/
+	try{
 	input=JSON.parse(input);
+	// kas on ikka õige json-i objekt?
+	if(input.hasOwnProperty('variable')&&input.hasOwnProperty('id')&&input.hasOwnProperty('prettyVariable')&&input.hasOwnProperty('multigraph')&&
+	input.hasOwnProperty('unit')&&input.hasOwnProperty('style')&& input.hasOwnProperty('end')&&input.hasOwnProperty('start')&&input.hasOwnProperty('lat')&&input.hasOwnProperty('lng')==false){
+		return;
+	}
+	}
+	catch(err){
+		return;
+	}
 	if (input.multigraph){
 		getBits(input)
 		return;

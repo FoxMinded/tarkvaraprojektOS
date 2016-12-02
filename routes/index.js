@@ -16,7 +16,7 @@ router.get('/:sth', function(req, res, next) {
 });
 router.use(function (err, req, res, next) {
   console.error(err.stack)
-  res.status(500).send('Something broke!')
+  res.render('request.ejs', { theMonsterInput: "999" });
 })
 
 //assuming app is express Object.

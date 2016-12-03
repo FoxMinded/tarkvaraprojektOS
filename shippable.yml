@@ -1,4 +1,5 @@
 # language setting
+build_image: drydock/u14nodall:prod
 language: node_js
 
 # version numbers
@@ -9,7 +10,7 @@ node_js:
 services:
   - selenium
 addons:
-  firefox: "17.0"
+  firefox: "23.0"
 script:
   - export DISPLAY=:99.0
   - xvfb-run --server-args="-ac" npm test

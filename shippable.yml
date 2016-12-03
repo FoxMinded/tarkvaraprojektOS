@@ -9,7 +9,7 @@ node_js:
 services:
   - selenium
 addons:
-  firefox: "49.0"
+  firefox: "29.0"
 env:
   - firefox="49.0"
   

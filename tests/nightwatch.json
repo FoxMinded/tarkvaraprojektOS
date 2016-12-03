@@ -1,8 +1,8 @@
 {
-  "src_folders" : ["./tests"],
-  "output_folder" : "./tests/reports",
-  "custom_commands_path" : "./node_modules/nightwatch/examples/custom-commands",
-  "page_objects_path" : "./node_modules/nightwatch/examples/pages",
+  "src_folders" : ["../tests"],
+  "output_folder" : "../tests/reports",
+  "custom_commands_path" : "../node_modules/nightwatch/examples/custom-commands",
+  "page_objects_path" : "../node_modules/nightwatch/examples/pages",
   "custom_assertions_path" : "",
   "globals_path" : "",
   "live_output" : false,
@@ -12,7 +12,7 @@
 
   "selenium" : {
     "start_process" : true,
-    "server_path" : "./bin/selenium2.41.0.jar",
+    "server_path" : "../bin/selenium2.41.0.jar",
     "log_path" : "",
     "port" : 4445,
     "cli_args" : {

@@ -1,5 +1,4 @@
 # language setting
-build_image: drydock/u14nodall:prod
 language: node_js
 
 # version numbers
@@ -11,6 +10,18 @@ services:
   - selenium
 addons:
   firefox: "49.0"
+env:
+  - firefox="49.0"
+  
+before_install:
+  - pushd /tmp
+  - "sudo wget \"https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$firefox/linux-x86_64/en-US/firefox-$firefox.tar.bz2\""
+  - sudo tar -xjvf firefox-$firefox.tar.bz2
+  - sudo ln -sf /tmp/firefox/firefox /usr/bin/firefox
+  - ff_version=`firefox --version`
+  - echo "Using firefox version $ff_version"
+  - popd
+  
 script:
   - export DISPLAY=:99.0
   - xvfb-run --server-args="-ac" npm test

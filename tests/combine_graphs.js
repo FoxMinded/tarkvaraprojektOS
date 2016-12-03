@@ -11,7 +11,6 @@ module.exports = {
 		.click("div.menu > div:nth-child(1)")
 		.pause(2000)
 		.click("div.ui.fluid.search.selection.dropdown.s2")
-		.click("div.item.selected")
 		.pause(2000)
 		.click('#generateGraph')
 		.pause(5000)
@@ -21,7 +20,6 @@ module.exports = {
 		.click("div.menu > div:nth-child(2)")
 		.pause(1000) 
 		.click("div.ui.fluid.search.selection.dropdown.s2")
-		.click("div.item.selected")
 		.click('#generateGraph')
 		.pause(1000)
 		.assert.visible('#graph')
@@ -30,11 +28,11 @@ module.exports = {
 		.pause(2000)
 		.assert.visible('#myModal')
 		.pause(5000)
-        .click('#combine')
-        .pause(4000)
-        .click("#chart00")
-        .pause(1000)
-        .assert.elementPresent('#chart2')
+        	.click('#combine')
+        	.pause(4000)
+        	.click("#chart00")
+        	.pause(1000)
+        	.assert.elementPresent('#chart2')
 		.end();
 		
   }

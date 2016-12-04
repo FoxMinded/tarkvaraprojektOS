@@ -16,7 +16,7 @@
     "log_path" : "",
     "port" : 4445,
     "cli_args" : {
-      "webdriver.gecko.driver" : "/bin/geckodriver.exe"
+      "webdriver.gecko.driver" : ""
     }
   },
 

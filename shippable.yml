@@ -9,7 +9,7 @@ node_js:
 services:
   - selenium
 env:
-  - firefox="49.0"
+  - firefox="45.0"
   
 before_install:
   - pushd /tmp

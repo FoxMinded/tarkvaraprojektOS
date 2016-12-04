@@ -5,11 +5,20 @@ language: node_js
 node_js:
   - "0.11"
   - "0.10"
-addons:
-  firefox: "23.0"
 services:
   - selenium
+env:
+  - firefox="45.0"
+  
+before_install:
+  - pushd /tmp
+  - "sudo wget \"https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/$firefox/linux-x86_64/en-US/firefox-$firefox.tar.bz2\""
+  - sudo tar -xjvf firefox-$firefox.tar.bz2
+  - sudo ln -sf /tmp/firefox/firefox /usr/bin/firefox
+  - ff_version=`firefox --version`
+  - echo "Using firefox version $ff_version"
+  - popd
+  
 script:
-  - sudo npm install
-  - "export DISPLAY=:99.0"
+  - export DISPLAY=:99.0
   - xvfb-run --server-args="-ac" npm test

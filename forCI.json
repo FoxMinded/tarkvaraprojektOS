@@ -12,11 +12,11 @@
 
   "selenium" : {
     "start_process" : true,
-    "server_path" : "./bin/selenium.jar",
+    "server_path" : "./bin/selenium2.52.0.jar",
     "log_path" : "",
     "port" : 4445,
     "cli_args" : {
-      "webdriver.gecko.driver" : "/bin/geckodriver.exe"
+      "webdriver.gecko.driver" : ""
     }
   },
 

@@ -1,7 +1,7 @@
 
 L.mapbox.accessToken = 'pk.eyJ1IjoicGxhbmV0b3MiLCJhIjoiZjZkNDE4MTE5NWNhOGYyMmZhZmNhMDQwMDg0YWMyNGUifQ.htlwo6U82iekTcpGtDR_dQ';
 
-var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([44.59,39.02],2);  		
+var map = L.mapbox.map('map',null,{ zoomControl:false,maxBounds:[[-85,-180],[85,180]]}).setView([44.59,39.02],2);  		
 var zoomControl = L.control.zoom({position:"topright"});
 map.addControl(zoomControl);
 $(".leaflet-top").css("z-index",1)

@@ -4,7 +4,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoicGxhbmV0b3MiLCJhIjoiZjZkNDE4MTE5NWNhOGYyMmZhZ
 var map = L.mapbox.map('map',null,{ zoomControl:false }).setView([44.59,39.02],2);  		
 var zoomControl = L.control.zoom({position:"topright"});
 map.addControl(zoomControl);
-
+$(".leaflet-top").css("z-index",1)
 var layer2 = L.mapbox.tileLayer('mapbox.light');
 map.addLayer(layer2);
 
@@ -60,21 +60,7 @@ map.on("draw:drawstop", function(e){
 	$("#mapdiv").css("border", "1px solid");
 	$("#markerButton").on('click', removeMarker);
 });
-map.on("draw:drawvertex", function(e){
-	console.log("drawvertex");
-});
-map.on("draw:editstart", function(e){
-	console.log("editstart");
-});
-map.on("draw:editmove", function(e){
-	console.log("editmove");
-});
-map.on("draw:editresize", function(e){
-	console.log("editresize");
-});
-map.on("draw:editstop", function(e){
-	console.log("editstop");
-});
+
 var layer = {};
 var latlngobj = {
 	lat :"",
@@ -121,20 +107,6 @@ map.on('draw:created', function(e) {
 	featureGroup.addLayer(e.layer);
 });
 
-
-map.on('draw:edited', function (e) {
-	console.log("edited");
-	var layers = e.layers;    	
-	layers.eachLayer(function (layer) {
-		
-	});
-   
-});
-
-map.on("draw:deleted", function(e) {
-	console.log("deleted");
-	
-});
 
 function displayCoord(){
 	var text="";

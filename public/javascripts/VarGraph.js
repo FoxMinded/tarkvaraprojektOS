@@ -19,11 +19,11 @@ function getVariables(value,text){
 	$("#datasets").css("border", "");
 	var id=value
 	if (id=="") return false;
-	console.log(id); 
+	//console.log(id); 
 	var stndname =[];
 	var varname = [];
 	units=[];
-	console.log(url+"/"+id+key);
+	//console.log(url+"/"+id+key);
 	$.getJSON(url+"/"+id+key, function(data){
 		var geojson= {
 			"type": data.SpatialExtent.type,
@@ -63,7 +63,7 @@ function modalFunc(event){
 		combchart={};
 		$("#myModal2").css("display","none");
 		$("#combgraph").empty();
-		console.log("olemasolevad graafid: ", graphList);
+		//console.log("olemasolevad graafid: ", graphList);
 		return false;
 	}
 	
@@ -100,69 +100,70 @@ function modalFunc(event){
 		}
 
 
-		var ctx = $("#modalcontent");
-		var newgraph = new Chart(ctx,graphList[targetid].config);
-		$("#myModal").css("display","block");
-		
-		$('.close').off('click')
-		$(".close").click(function(){
+	var ctx = $("#modalcontent");
+	var newgraph = new Chart(ctx,graphList[targetid].config);
+	$("#myModal").css("display","block");
+	
+	$('.close').off('click')
+	$(".close").click(function(){
+		$('#linkAddress1').clone().attr('type','hidden').insertAfter('#linkAddress1').prev().remove();
+		$("#myModal").css("display","none");
+		$("#myModal2").css("display", "none");
+		newgraph.destroy();
+		combchart={};
+		$("#combgraph").empty();
+	});
+	
+	$("#myModal, #myModal2").click(function(e){
+		if (e.target.id == "myModal" || e.target.id=="myModal2"){
 			$('#linkAddress1').clone().attr('type','hidden').insertAfter('#linkAddress1').prev().remove();
 			$("#myModal").css("display","none");
-			$("#myModal2").css("display", "none");
+			$("#myModal2").css("display","none");
 			newgraph.destroy();
 			combchart={};
-			$("#combgraph").empty();
-		});
-		
-		$("#myModal, #myModal2").click(function(e){
-			if (e.target.id == "myModal" || e.target.id=="myModal2"){
-				$('#linkAddress1').clone().attr('type','hidden').insertAfter('#linkAddress1').prev().remove();
-				$("#myModal").css("display","none");
-				$("#myModal2").css("display","none");
-				newgraph.destroy();
-				combchart={};
-				$("#combgraph").empty();	
+			$("#combgraph").empty();	
+		}
+	});
+	$("#remove").off('click');
+	$("#remove").click(function(){
+		removegraph(targetid,newgraph);
+	});
+	$("#getLink1").off('click');
+	$("#getLink1").click(function(){
+		getLink(targetid);
+	});
+	$("#combine").off("click");
+	$("#combine").click(function(){
+		var num = 0;
+		//ehitab mymodal2 olemasolevatest graafidest
+		for (var i=0;i<Object.keys(graphList).length;i++){
+			var canvasid= Object.keys(graphList)[i];
+			//kui graafikus on vaid 1 element, siis on modal tühi
+			if (canvasid != targetid){
+				var divid= "canvasdiv"+canvasid.substring(5)+num;
+				$("<div>").attr({id:divid}).appendTo("#combgraph");
+				$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
+				var ctx = $("#"+canvasid+num);
+				var copygraph = new Chart(ctx,graphList[canvasid].config);
 			}
-		});
-		$("#remove").off('click');
-		$("#remove").click(function(){
-			removegraph(targetid,newgraph);
-		});
-		$("#getLink1").off('click');
-		$("#getLink1").click(function(){
-			getLink(targetid);
-		});
-		$("#combine").off("click");
-		$("#combine").click(function(){
-			var num = 0;
-			//ehitab mymodal2 olemasolevatest graafidest
-			for (var i=0;i<Object.keys(graphList).length;i++){
-				var canvasid= Object.keys(graphList)[i];
-				//kui graafikus on vaid 1 element, siis on modal tühi
-				if (canvasid != targetid){
-					var divid= "canvasdiv"+canvasid.substring(5)+num;
-					$("<div>").attr({id:divid}).appendTo("#combgraph");
-					$("<canvas>").attr({id:canvasid+num}).click(modalFunc).appendTo("#"+divid);
-					var ctx = $("#"+canvasid+num);
-					var copygraph = new Chart(ctx,graphList[canvasid].config);}
-				}
-			//if the the modal view is empty then the modal view is shut and message would appear in the main view'
-			if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
-				console.log("the modal view is empty");
-				$("#myModal").css("display","none");
-				$("#myModal2").css("display","none");
-				//want to change the p elements value
-				$("#feedback").html("Nothing to combine the graph with!");
-				$("#feedback").css('visibility', 'visible');
-				setTimeout(fadeMessage,7000);
-				return;
-			}
-			combine(targetid,newgraph);
-			$("#myModal2").css("display","block");
-		});
-	}
+		}
+		//if the the modal view is empty then the modal view is shut and message would appear in the main view'
+		if (Object.keys(graphList).length==1 && Object.keys(graphList)[0]==targetid){
+			//console.log("the modal view is empty");
+			$("#myModal").css("display","none");
+			$("#myModal2").css("display","none");
+			//want to change the p elements value
+			$("#feedback").html("Nothing to combine the graph with!");
+			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000);
+			return;
+		}
+		combine(targetid,newgraph);
+		$("#myModal2").css("display","block");
+	});
+}
 function fadeMessage(){
-	$("#feedback").css('visibility', 'hidden')
+	$("#feedback").css('visibility', 'hidden');
 }
 function removegraph(id,newgraph){
 	newgraph.destroy();
@@ -174,7 +175,7 @@ function removegraph(id,newgraph){
 		$("#graph").hide();
 	}
 	$("#myModal").css("display","none");
-	console.log(graphList);
+	//console.log(graphList);
 	$("#mapgraph").focus();
 	
 }
@@ -191,14 +192,38 @@ function combine(id,newgraph){
 	combchart[id] = graphList[id];
 }
 function checkingValuesFromAPI1(){
-		$("#feedback").html(" The query to API didn't give any results!");
-		$("#feedback").css('visibility', 'visible');
-		setTimeout(fadeMessage,7000)
+	$("#feedback").html("The query to API didn't give any results!");
+	$("#feedback").css('visibility', 'visible');
+	setTimeout(fadeMessage,7000)
 }
 
+function isEquivalent(input1, input2) {
+    // Create arrays of property names
+    var props = Object.getOwnPropertyNames(input1);
+
+    for (var i = 0; i < props.length; i++) {
+        var propName = props[i];
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (input1[propName] !== input2[propName]) {
+            return false;
+        }
+    }
+    return true;
+}
 // gets values on the basis to do the chart
 function generateGraph(){
+	$("body").addClass("waiting");
 	var input = getValues();
+	for (var i in dataList){
+		if (isEquivalent(input,dataList[i])){
+			$("#feedback").html("You already have graph with these variables!");
+			$("#feedback").css('visibility', 'visible');
+			setTimeout(fadeMessage,7000);
+			$("body").removeClass("waiting");
+			return false;
+		}
+	}
 	if (!input){
 		return false;
 	}
@@ -207,6 +232,7 @@ function generateGraph(){
 						"&start="+input.start+"&end="+input.end+"&count=20";
 	//console.log(input);
 	$.getJSON(currenturl,function(data){
+		$("body").removeClass("waiting");
 		var values=[];
 		var time=[];
 		// if there are no values in the query
@@ -226,15 +252,24 @@ function generateGraph(){
 				checkingValuesFromAPI1();
 				return;
 			}
-		
-		var canvasid = createCanvas();
 		var modtime = modTime(time);
+		for (var i in graphList){
+			if (graphList[i].config.data.labels[0]==modtime[0] 
+				&& graphList[i].config.data.datasets[0].data.toString()==values.toString()){
+				$("#feedback").html("You already have graph with this data!");
+				$("#feedback").css('visibility', 'visible');
+				setTimeout(fadeMessage,7000);
+				return false;
+			}
+		}
+		var canvasid = createCanvas();
 		createGraph(canvasid,values,modtime,input);
 		moregraphs=false;
 		$("#graph").show();
 		$("#mapgraph").animate({ scrollTop: $("#"+canvasid).position().top}, "slow");
 		
 		$("#mapgraph").focus();
+		
 	//	console.log(graphList);
 		
 	});
@@ -253,7 +288,7 @@ function modTime(time){
 	}
 	return modTime;
 }
-//will get the values from the form and 
+//will get the values from the form
 function getValues(){
 	var start = $("#StarT").val();
 	var end = $("#end").val();
@@ -301,12 +336,15 @@ $("#varid").on('change', function() {
 var moregraphs=false;
 
 function randomColor(){
-	return "rgba("+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+Math.floor(Math.random()*256)+","+0.5+")";
+	var r=Math.floor(Math.random()*256);
+	var g=Math.floor(Math.random()*256);
+	var b=Math.floor(Math.random()*256);
+	var a=0.5;
+	if (r>180 && g>180 && b>180) a=1;
+	return "rgba("+r+","+g+","+b+","+a+")";
 }
 var graphList= [];
 var dataList=[];
-//var lastGraph;
-
 
 function createGraph(id,values,time,input){
 	var index = document.getElementById("varid").selectedIndex;
@@ -329,7 +367,7 @@ function createGraph(id,values,time,input){
 		labels: time,
 		datasets: [{
 			type: graphType,
-			label: lableName, // see peaks andma mulle muutuja nime
+			label: lableName,
 			data: values,
 			yAxisID:"y-axis-0",
 			fill:false,
@@ -368,7 +406,7 @@ function createGraph(id,values,time,input){
 	});
 	graphList[id]=myChart;
 	dataList[id]=input;
-	//lastGraph=myChart;
+	
 }
 
 function findingIndex(confPart){
@@ -473,7 +511,6 @@ function multigraphs(c1,c2){
 				}
 		
 			}
-			console.log("data11 ", clone);
 			
 			var dataset = {
 					fill:false,
@@ -523,16 +560,13 @@ function multigraphs(c1,c2){
 		
 		
 		if (c2.data.datasets[i].yAxisID === c1.data.datasets[0].yAxisID){ //y-axis-0==y-axis-0
-			console.log("c2 dataset on vaskapoolsel y-teljel");
 			if ( unit2 === unit1 ){
-				console.log("unit2 == unit1")
 				chart.data.datasets.push(dataset);
 				chart.update();
 				continue;
 			}
 			else if (unit2 === unit11 || unit11==="") {
 				dataset.yAxisID="y-axis-1";
-				console.log("unit2==unit11 või unit11==''");
 				chart.options.scales.yAxes[1].display=true;
 				chart.options.scales.yAxes[1].scaleLabel.labelString=unit2;
 				chart.data.datasets.push(dataset);
@@ -540,7 +574,6 @@ function multigraphs(c1,c2){
 				continue;
 			}
 			else {
-				console.log("c2 dataset[i] ei saa panna kummalegi y-teljele");
 				chart.destroy();
 				$("#canvasdiv"+id.substring(5)).remove();
 				$("#feedback").html("Can't add graph - units are different");
@@ -550,16 +583,13 @@ function multigraphs(c1,c2){
 			}
 		}
 		else { //y-axis-1==y-axis-1
-			console.log("c2 dataset on parempoolsel y-teljel");
 			if ( unit22 === unit1 ){
-				console.log("unit22==unit1");
 				dataset.yAxisID="y-axis-0"; //või c1.data.datasets[0].yAxisID - unit1 y-axis id
 				chart.data.datasets.push(dataset);
 				chart.update();
 				continue;
 			}
 			else if (unit22 === unit11 || unit11==="") {
-				console.log("unit22==unit11 või unit11==''");
 				dataset.yAxisID="y-axis-1";
 				chart.options.scales.yAxes[1].display=true;
 				chart.options.scales.yAxes[1].scaleLabel.labelString=unit22;
@@ -568,7 +598,6 @@ function multigraphs(c1,c2){
 				continue;
 			}
 			else {
-				console.log("c2 dataset[i] ei saa panna kummalegi y-teljele");
 				chart.destroy();
 				$("#canvasdiv"+id.substring(5)).remove();
 				return false;

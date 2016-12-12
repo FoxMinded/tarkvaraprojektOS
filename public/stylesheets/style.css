@@ -7,25 +7,22 @@ body {
 	padding: 50px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 	background: rgb(254,252,234); /* Old browsers */
-  background: -webkit-linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
-  background: -o-linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
-  background: linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
- /* FF3.6-15 */
- /* Chrome10-25,Safari5.1-6 */
- /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fefcea', endColorstr='#b2e3e8',GradientType=0 ); /* IE6-9 */
-
+    background: -webkit-linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
+    background: -o-linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
+    background: linear-gradient(rgba(254,252,234,1) 0%, rgba(178,227,232,1) 100%);
+    /* FF3.6-15 */
+    /* Chrome10-25,Safari5.1-6 */
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 a {
   color: #00B7FF;
 }
-input::-webkit-calendar-picker-indicator {
-              opacity: 100;
-           }
-		
-  		.leaflet-control-attribution, leaflet-control {display:none}
-		.default {display:none}
+
+body.waiting {
+	cursor:progress;
+}
+.leaflet-control-attribution, leaflet-control {display:none}
 
 #vars {
 		float:left;
@@ -39,75 +36,75 @@ input::-webkit-calendar-picker-indicator {
 		}
 		*/
 #mapgraph {		
-			overflow:auto;
-			position:relative;
-			height:100%;
-			float:left;
-			width:59%;
-			margin-left:5px;
-		}
-		#mapdiv {
-			position:relative;
-			border:1px solid;
-			height:40%;
-		}
-		#map{ position:absolute; width:100%; height:100%}
-		
-		#markerButton {
-			margin-top:3px;
-			margin-left:3px;
-			
-			position:relative;
-			z-index:1
-		}
-		
+	overflow:auto;
+	position:relative;
+	height:100%;
+	float:left;
+	width:59%;
+	margin-left:5px;
+}
+#mapdiv {
+	position:relative;
+	border:1px solid;
+	height:40%;
+}
+#map{ position:absolute; width:100%; height:100%}
 
-		#graph{
-			height:50%;
-			width:99%;
-			display:none;
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-		}
-		#graph >div{
-			height:70%;
-			width:50%;
+#markerButton {
+	margin-top:3px;
+	margin-left:3px;
 	
-		}
-		
-		#generateGraph {
-			position:absolute;
-			bottom:20px;
-		}
-		#addNewGraph {
-			float:right;
-		}
-		[tabindex] {
-			outline: none !important;
-		}
-		#div1 {
-			margin-top:5%;
-		}
-    #st, #st1{
-      margin-left:4%;
-    }
-    #st1{
-      margin-top:4.5%;
-    }
-    #st{
-      margin-top:1.5%;
-    }
-    #st, #st1{
-      float:left; 
-    }
-    #start1{
-        margin-left:4px;
-        margin-top:3%;
-    }
-    #datasets{
-      margin-bottom:3%;
-    }
+	position:relative;
+	z-index:1
+}
+
+
+#graph{
+	height:50%;
+	width:99%;
+	display:none;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+#graph >div{
+	height:70%;
+	width:50%;
+
+}
+
+#generateGraph {
+	position:absolute;
+	bottom:20px;
+}
+#addNewGraph {
+	float:right;
+}
+[tabindex] {
+	outline: none !important;
+}
+#div1 {
+	margin-top:5%;
+}
+#st, #st1{
+  margin-left:4%;
+}
+#st1{
+  margin-top:4.5%;
+}
+#st{
+  margin-top:1.5%;
+}
+#st, #st1{
+  float:left; 
+}
+#start1{
+	margin-left:4px;
+	margin-top:3%;
+}
+#datasets{
+  margin-bottom:3%;
+}
 #feedback{
 	visibility:hidden;
 	width:80%;
